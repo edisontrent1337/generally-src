@@ -1,0 +1,2 @@
+# Start the game and sit in the main menu.
+script: 20000:quit:0

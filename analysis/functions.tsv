@@ -1,0 +1,1246 @@
+addr	size	class	label	reason
+00401250	2453	game		
+00401bf0	261	game		
+00401d10	270	game		
+00401e20	46	stl	vector<8B>::_Tidy	reviewed
+00401e50	114	stl		STL throw helper
+00401ed0	95	stl	allocator<8B>::deallocate	reviewed
+00401f30	95	stl		STL throw helper
+00401f90	46	stl	std::exception copy ctor	reviewed
+00401fc0	14	game		
+00401fd0	49	stl	std::exception scalar deleting dtor	reviewed
+00402010	27	stl		only used by STL code
+00402030	28	stl		only used by STL code
+00402050	18	stl	std::exception::~exception	reviewed
+00402070	73	stl	facet delete (unwind helper)	reviewed
+004020c0	159	game	File::File	reviewed
+00402160	161	game	File::~File	reviewed
+00402210	185	game	File::open(name, mode)	reviewed
+004022d0	387	game	File::close	reviewed
+00402460	175	game	File::read	reviewed
+00402510	182	game	File::write	reviewed
+004025d0	101	game	File::seek	reviewed
+00402640	106	game	File::mark	reviewed
+004026b0	71	game	File::tell	reviewed
+00402700	106	game	File::size	reviewed
+00402770	12	stl	string::c_str	reviewed
+00402780	30	stl	string::operator=(const string&)	reviewed
+004027a0	52	stl	string::~string	reviewed
+004027e0	89	stl		only used by STL code
+00402840	20	stl	string::string()	reviewed
+00402860	88	stl	basic_filebuf::close (fstream::close)	reviewed
+004028c0	185	stl		filebuf
+00402980	59	stl		codecvt
+004029c0	46	stl	basic_filebuf::sync	reviewed
+004029f0	80	stl	basic_filebuf::setbuf	reviewed
+00402a40	247	stl	basic_filebuf::seekpos	reviewed
+00402b40	268	stl	basic_filebuf::seekoff	reviewed
+00402c50	526	stl		codecvt
+00402e60	61	stl	basic_filebuf::underflow	reviewed
+00402ea0	136	stl	basic_filebuf::pbackfail	reviewed
+00402f30	485	stl		codecvt
+00403120	16	stl	basic_filebuf::_Unlock	reviewed
+00403130	16	stl	basic_filebuf::_Lock	reviewed
+00403140	147	stl		filebuf
+004031e0	87	stl	basic_fstream deleting dtor	reviewed
+00403240	35	stl	basic_filebuf deleting dtor	reviewed
+00403270	90	stl	string::_Become_small	reviewed
+004032d0	33	stl		only used by STL code
+00403300	155	stl		STL throw helper
+004033a0	216	stl		STL throw helper
+00403480	19	stl	string::assign(const string&)	reviewed
+004034a0	108	stl		STL throw helper
+00403510	54	stl	basic_filebuf::_Set_back	reviewed
+00403550	35	stl	basic_filebuf::_Reset_back	reviewed
+00403580	318	stl		codecvt
+004036c0	139	stl	basic_filebuf::_Init	reviewed
+00403750	215	stl		codecvt
+00403830	90	stl	allocator<char>::deallocate	reviewed
+00403890	5	stl	trivial virtual (returns arg)	reviewed
+004038a0	121	stl		STL throw helper
+00403920	66	stl		only used by STL code
+00403970	55	stl		STL throw helper
+004039b0	124	stl	string::_Copy (grow)	reviewed
+00403a2c	29	eh		unwind funclet
+00403a49	9	stl	string::_Copy (catch fragment)	reviewed
+00403a52	126	stl	string::_Copy (tail)	reviewed
+00403ad0	21	eh		unwind funclet
+00403af0	98	stl		STL throw helper
+00403b60	247	stl		codecvt
+00403c60	3	compiler	empty ctor	reviewed
+00403c70	52	stl	bad_cast copy ctor	reviewed
+00403cb0	17	stl	string moved-from reset	reviewed
+00403cc1	8	stl	basic_fstream vbase deleting dtor thunk	reviewed
+00403cd0	1	crt	_guard_check_icall (CFG no-op)	reviewed
+00403ce0	96	stl	memcmp (char_traits::compare)	reviewed
+00403d40	353	game	lessNoCase(string, string)	reviewed
+00403eb0	357	game	lessNoCase variant (sort predicate)	reviewed
+00404020	1136	game	listDirectory	reviewed
+00404490	125	game	deleteFolder (SHFileOperation)	reviewed
+00404510	192	stl	vector<string>::push_back	reviewed
+004045d0	55	stl	string::substr	reviewed
+00404610	121	stl	string::string(string&&)	reviewed
+00404690	81	stl	string::string(const char*)	reviewed
+004046f0	142	stl		STL throw helper
+00404780	185	stl	string::assign(const char*, size_t)	reviewed
+00404840	228	stl		STL throw helper
+00404930	178	stl		STL throw helper
+004049f0	104	stl	string move assign	reviewed
+00404a60	157	stl	vector<string>::_Reallocate	reviewed
+00404b00	118	stl	string::swap	reviewed
+00404b80	118	stl	string::operator=(string&&)	reviewed
+00404c00	98	stl	allocator<string>::deallocate	reviewed
+00404c70	260	stl	operator+(const char*, const string&)	reviewed
+00404d80	47	stl	operator+(string&&, ...)	reviewed
+00404db0	57	stl	string small-buffer swap	reviewed
+00404df0	97	stl		STL throw helper
+00404e60	216	stl		STL throw helper
+00404f40	90	stl	std::transform(tolower)	reviewed
+00404fa0	319	stl	std::sort<string> _Sort_unchecked	reviewed
+004050e0	75	stl	_Destroy_range<string>	reviewed
+00405130	760	stl	std::sort<string> _Partition_by_median_guess	reviewed
+00405430	62	stl	string::~string (unwind)	reviewed
+00405470	181	stl	std::sort<string> _Guess_median	reviewed
+00405530	295	stl	std::sort<string> _Insertion_sort	reviewed
+00405660	214	stl	std::sort<string> _Sort_heap	reviewed
+00405740	560	stl	std::sort<string> _Insertion_sort	reviewed
+00405970	53	stl	_Uninitialized_move<string>	reviewed
+004059b0	170	stl	std::sort<string> _Med3	reviewed
+00405a60	316	stl	std::sort<string> _Push_heap	reviewed
+00405ba0	270	stl	std::sort<string> _Adjust_heap	reviewed
+00405cb0	157	stl	move_backward<string>	reviewed
+00405d50	165	stl	std::sort<string> _Pop_heap	reviewed
+00405e00	23	stl	std::cos(float)	reviewed
+00405e20	23	stl	std::log10(float)	reviewed
+00405e40	23	stl	std::sin(float)	reviewed
+00405e60	23	stl	std::sqrt(float)	reviewed
+00405e80	8	stl	cosf	reviewed
+00405e90	8	stl	sinf	reviewed
+00405ea0	8	stl	sqrtf	reviewed
+00405eb0	23	game	Vec3::Vec3()	reviewed
+00405ed0	17	game	Vec3::Vec3(x, y, z)	reviewed
+00405ef0	28	game	Vec3::operator=	reviewed
+00405f10	43	game	Vec3::operator/=	reviewed
+00405f40	54	game	Vec3::operator+=	reviewed
+00405f80	54	game	Vec3::operator-=	reviewed
+00405fc0	50	game	Vec3::operator*	reviewed
+00406000	43	game	Vec3 operator*(float, Vec3)	reviewed
+00406030	55	game	Vec3::operator+	reviewed
+00406070	55	game	Vec3::operator-	reviewed
+004060b0	207	game		reviewed
+00406180	43	crt	`vector constructor iterator'	reviewed
+004061c0	4947	game		
+00407520	1745	game		
+00407c00	204	game		
+00407cd0	15252	game		
+0040b890	9035	game		
+0040dbe0	4905	game		
+0040ef10	982	game		
+0040f2f0	1216	game		
+0040f7f0	18725	game		
+00414120	10902	game		
+00416bc0	130	game		
+00416c50	793	game		
+00416f70	256	game		
+00417070	46	stl		STL throw helper
+004170a0	4172	game		
+004180f0	3777	game		
+00418fd0	1422	game		
+00419560	366	game		
+004196d0	358	game		
+00419840	11231	game		
+0041c460	766	game		
+0041c760	11347	game		
+0041f3c0	4495	game		
+00420560	52701	game		
+0042d3d0	2740	game		
+0042de90	2933	game		
+0042ea10	3106	game		
+0042f640	45620	game		
+0043a910	727	game		
+0043abf0	620	game		
+0043ae60	544	game		
+0043b080	1834	game		
+0043b7c0	587	game		
+0043ba10	338	game		
+0043bb70	103	game		
+0043bbe0	695	game		
+0043bea0	98	game		
+0043bf20	519	game		
+0043c130	2296	game		
+0043ca30	446	game		
+0043cbf0	350	game		
+0043cd50	793	game		
+0043d070	167	game		reviewed
+0043d120	619	game		
+0043d390	10396	game		
+0043fc60	744	game		reviewed
+0043ff50	629	game		
+004401d0	666	game		
+00440470	83	stl	vector<string>::_Tidy	reviewed
+004404d0	73	stl	operator+(const string&, const char*)	reviewed
+00440520	1348	game		
+00440a70	4874	game		
+00441d80	150	game		reviewed
+00441e20	82	game		reviewed
+00441e80	97	game		reviewed
+00441ef0	82	game		reviewed
+00441f50	907	game		
+004422e0	168	game		
+00442390	1588	game		
+004429d0	851	game		
+00442d30	612	game		
+00442fa0	779	game		
+004432b0	168	game		
+00443360	1281	game		
+00443870	592	game		
+00443ac0	425	game		
+00443c70	15	stl	vector<int>::operator[]	reviewed
+00443c80	9	stl	vector<int>::size	reviewed
+00443c90	48	stl	operator+(const string&, const string&)	reviewed
+00443cc0	3613	game		
+00444ae0	4320	game		
+00445bc0	545	game		
+00445df0	535	game		
+00446010	5072	game		
+004473e0	1933	game		
+00447b70	217	game		
+00447c50	2396	game		
+004485b0	262	stl	operator+(string, ...)	reviewed
+004486c0	23131	game		
+0044e120	2017	game		
+0044e910	891	game		
+0044fa10	372	game		
+0046a040	5428	game		
+0046b580	3847	game		
+0046c490	188	game		
+0046c550	31	game	display mode comparator (sort predicate)	reviewed
+0046c570	407	game	enumerateDisplayModes	reviewed
+0046c710	162	game		
+0046c7c0	70	game		
+0046c810	67	game		
+0046c860	104	game		
+0046c8d0	122	game		
+0046c950	111	game		
+0046c9c0	680	game		
+0046cc70	177	game		
+0046cd30	84	game		
+0046cd90	50	game		
+0046cdd0	147	game		
+0046ce70	177	game		
+0046cf30	99	stl		STL throw helper
+0046cfa0	95	stl	vector<8B>::_Reallocate	reviewed
+0046d000	3	compiler	empty ctor	reviewed
+0046d010	237	stl	std::sort<8B> _Sort_unchecked	reviewed
+0046d100	595	stl	std::sort<8B> _Partition_by_median_guess	reviewed
+0046d360	160	stl	std::sort<8B> _Guess_median	reviewed
+0046d400	83	stl	std::sort<8B> _Make_heap	reviewed
+0046d460	106	stl	std::sort<8B> _Sort_heap	reviewed
+0046d4d0	213	stl	std::sort<8B> _Insertion_sort	reviewed
+0046d5b0	43	stl	_Uninitialized_move<8B>	reviewed
+0046d5e0	116	stl	std::sort<8B> _Med3	reviewed
+0046d660	129	stl	std::sort<8B> _Pop_heap_hole	reviewed
+0046d6f0	111	stl	std::sort<8B> _Push_heap	reviewed
+0046d760	201	game		reviewed
+0046d830	189	game		reviewed
+0046d8f0	345	game		
+0046da50	165	game		
+0046db00	136	game		
+0046db90	84	game		
+0046dbf0	366	game		
+0046dd60	490	game		
+0046df50	1417	game		
+0046e4e0	491	game		
+0046e6d0	1402	game		
+0046ec50	228	game		
+0046ed40	120	game		
+0046edc0	137	game	Sample::Sample (refcounted)	reviewed
+0046ee50	74	game	Sample::release	reviewed
+0046eea0	244	game		
+0046efa0	215	game	loadWav	reviewed
+0046f080	590	game		
+0046f2d0	6	crt	__local_stdio_printf_options	reviewed
+0046f2e0	52	crt	vsprintf (stdio.h inline)	reviewed
+0046f320	33	crt	sprintf (stdio.h inline)	reviewed
+0046f350	27	crt	sprintf (stdio.h inline)	reviewed
+0046f430	92	game		
+0046f4d0	6	crt	__local_stdio_scanf_options	reviewed
+0046f4e0	38	crt	sscanf (stdio.h inline)	reviewed
+0046f510	111	game		reviewed
+0046f580	96	compiler	`vector deleting destructor' (0x24-byte elements)	reviewed
+0046f5e0	54	game		reviewed
+0046f620	341	game		
+0046f780	92	game		reviewed
+0046f7e0	295	game	toString (stringstream)	reviewed
+0046f910	74	stl	basic_stringstream::~basic_stringstream	reviewed
+0046f960	307	game	toString (stringstream)	reviewed
+0046faa0	185	game		reviewed
+0046fb60	393	game		
+0046fcf0	98	compiler	`vector deleting destructor' (0x3c-byte elements)	reviewed
+0046fd90	100	compiler	implicit dtor (0x3c-byte struct with string)	reviewed
+0046fe00	85	game		reviewed
+0046fe60	289	game		
+0046ff90	991	game		
+00470370	319	game		reviewed
+004704b0	31	stl	basic_stringstream::str(const string&)	reviewed
+004704d0	187	stl	basic_stringstream ctor	reviewed
+00470590	298	stl	basic_stringbuf::seekpos	reviewed
+004706c0	450	stl	basic_stringbuf::seekoff	reviewed
+00470890	89	stl	basic_stringbuf::underflow	reviewed
+004708f0	87	stl	basic_stringbuf::pbackfail	reviewed
+00470950	463	stl	basic_stringbuf::overflow	reviewed
+00470b20	105	stl	basic_stringstream deleting dtor	reviewed
+00470b90	49	stl	basic_stringbuf deleting dtor	reviewed
+00470bd0	118	stl	basic_stringbuf::_Tidy	reviewed
+00470c50	259	stl	basic_stringbuf::str(const string&)	reviewed
+00470d60	156	stl	basic_stringbuf::_Init	reviewed
+00470dfc	8	stl	basic_stringstream vbase deleting dtor thunk	reviewed
+00470e10	95	game		
+00470e70	628	game		
+00471100	260	game		
+00471210	102	stl		STL throw helper
+00471280	96	stl	allocator<16B>::deallocate	reviewed
+004712e0	119	stl	vector<16B>::_Reallocate	reviewed
+00471360	95	stl		STL throw helper
+004713c0	8	game		
+004713d0	38	stl	_Uninitialized_move<16B>	reviewed
+00471400	732	game		
+004716e0	297	game	replace #NNNN# tokens in text	reviewed
+00471810	137	game		
+004718a0	323	game		
+00471ae0	158	game		
+00471b80	687	game		
+00471e50	505	game		
+00472050	625	game		
+004722d0	256	game		
+004723d0	385	game		
+00472560	24	crt	sprintf (stdio.h inline)	reviewed
+00472580	30	game		
+004725a0	446	game		
+00472760	200	game		reviewed
+00472830	1491	game		
+00472e10	504	game		
+00473010	268	game		
+00473120	378	game		
+004732a0	378	game		
+00473420	378	game		
+004735a0	903	game		
+00473930	461	game		
+00473b00	979	game		
+00473ee0	2338	game		
+00474810	20	game		
+00474850	736	game		
+00474b30	117	game		
+00474bf0	529	game		
+00474e10	293	game		
+00474f40	935	game		
+004752f0	2062	game		
+00475b00	1495	game		
+004760e0	400	game		
+00476280	376	game		
+00476400	235	game		
+004764f0	493	game		
+004766e0	36	game		reviewed
+00476710	581	game		
+00476960	563	game		
+00476ba0	908	game		
+00476f30	201	stl	vector<T>::push_back	reviewed
+00477000	85	stl	vector<NamedInt>::_Tidy	reviewed
+00477060	46	stl	vector<int>::_Tidy	reviewed
+00477090	147	stl		STL throw helper
+00477130	122	stl	vector<string>::push_back	reviewed
+004771b0	212	stl		STL throw helper
+00477284	17	eh		unwind funclet
+004772a0	150	stl		STL throw helper
+00477340	99	stl		STL throw helper
+004773b0	98	stl		ostream sentry
+00477420	99	stl	string::compare(const char*)	reviewed
+00477490	104	stl	string::find(const char*)	reviewed
+00477500	173	stl	vector<NamedInt>::_Reallocate	reviewed
+004775b0	95	stl	allocator<int>::deallocate	reviewed
+00477610	94	stl	vector<int>::_Reallocate	reviewed
+00477670	69	stl	ostream::sentry::~sentry (unwind)	reviewed
+004776c0	105	stl	allocator<NamedInt>::deallocate	reviewed
+00477730	455	stl		ostream sentry
+004778f7	26	eh		unwind funclet
+00477911	6	stl		ostream sentry
+00477917	94	stl		ostream sentry
+00477980	385	stl		ostream sentry
+00477b01	26	eh		unwind funclet
+00477b1b	6	stl		ostream sentry
+00477b21	93	stl		ostream sentry
+00477b80	95	stl		STL throw helper
+00477be0	103	stl		STL throw helper
+00477c50	329	stl	std::sort<NamedInt> _Sort_unchecked	reviewed
+00477da0	75	stl	_Destroy_range<NamedInt>	reviewed
+00477df0	849	stl	std::sort<NamedInt> _Partition_by_median_guess	reviewed
+00478150	197	stl	std::sort<NamedInt> _Guess_median	reviewed
+00478220	205	stl	std::sort<NamedInt> _Make_heap	reviewed
+004782f0	222	stl	std::sort<NamedInt> _Sort_heap	reviewed
+004783d0	482	stl	std::sort<NamedInt> _Insertion_sort	reviewed
+004785c0	152	stl		only used by STL code
+00478644	34	eh		unwind funclet
+00478680	59	stl	_Uninitialized_move<NamedInt>	reviewed
+004786c0	206	stl	std::sort<NamedInt> _Med3	reviewed
+00478790	358	stl	std::sort<NamedInt> _Pop_heap_hole	reviewed
+00478900	300	stl	std::sort<NamedInt> _Push_heap	reviewed
+00478a30	163	stl	move_backward<NamedInt>	reviewed
+00478ae0	173	stl	std::sort<NamedInt> _Pop_heap	reviewed
+00478b90	23	stl	std::fixed	reviewed
+00478bb0	26	stl	std::scientific	reviewed
+00478c00	68	game	struct ctor (int, int, byte, string)	reviewed
+00478c50	233	game	car struct ctor	reviewed
+00478d40	16809	game		
+0047cf10	55	compiler	implicit dtor (struct with string at +0x28)	reviewed
+0047cf50	764	game		
+0047d250	36	game		
+0047d280	166	game		
+0047d330	168	game		
+0047d3e0	783	game		
+0047d6f0	925	game		
+0047da90	169	game		
+0047db40	55	compiler	implicit dtor (struct with string at +0xc), used by globals	reviewed
+0047db80	1150	game		
+0047e000	1075	game		
+0047e440	3540	game		
+0047f220	382	game		
+0047f3a0	2262	game		
+0047fc80	4416	game		
+00480dc0	560	game		
+00480ff0	621	game		
+00481260	993	game		
+00481650	701	game		
+00481910	998	game		
+00481d00	2904	game		
+00482860	222	game		
+00482940	862	game		
+00482ca0	159	game		
+00482d40	106	game		
+00482db0	114	game		
+00482e30	415	game		
+00482fd0	471	game		
+004831b0	283	game		
+004832d0	204	game		
+004833a0	248	game		
+004834a0	252	game		
+004835a0	482	game		
+00483790	857	game		
+00483af0	195	game		
+00483bc0	1330	game		
+00484120	1305	game		
+00484640	83	game		
+004846a0	1520	game		
+00484c90	83	game		
+00484cf0	349	game		
+00484e50	441	game		
+00485010	45	stl	basic_stringstream::str(const string&)	reviewed
+00485040	46	stl	operator<<(ostream&, _Smanip) (setw)	reviewed
+00485070	804	game		
+004853a0	1454	game		
+00485950	5355	game		
+00486e40	479	game		
+00487020	643	game		
+004872b0	448	game		
+00487470	306	game		
+004875b0	3553	game		
+004883a0	1728	game		
+00488a60	71	game	list item ctor	reviewed
+00488ab0	312	game		
+00488c00	292	game		
+00488d30	108	game		
+00488da0	87	game		
+00488e00	222	game		
+00488ef0	411	game		reviewed
+00489090	67	game	list item dtor	reviewed
+004890e0	108	game		
+00489150	144	game		reviewed
+004891e0	230	game		
+004892d0	172	game		
+00489380	322	game		reviewed
+004894d0	244	game		reviewed
+004895d0	252	game		
+004896d0	148	game		reviewed
+00489770	117	game		reviewed
+004897f0	104	game		reviewed
+00489860	124	game		
+004898f0	744	game		
+00489be0	1496	game		
+0048a1e0	283	game		
+0048a300	203	game		
+0048a3d0	312	game		
+0048a510	239	game		
+0048a600	293	game		
+0048a730	93	game		
+0048a790	435	game		
+0048a950	225	game		reviewed
+0048aa40	99	stl	vector<T*>::push_back	reviewed
+0048aab0	62	stl	string::find(char)	reviewed
+0048aaf0	465	stl		STL throw helper
+0048acd0	171	stl		STL throw helper
+0048ad80	49	stl		only used by STL code
+0048adc0	363	game		
+0048af30	69	game		
+0048af80	569	game		
+0048b1c0	809	game		
+0048b4f0	61	game		
+0048b5a0	943	game		
+0048b950	544	game		
+0048bb70	189	game		
+0048bc30	195	game		
+0048bd00	195	game		
+0048bdd0	195	game		
+0048c050	255	game		
+0048c300	255	game		
+0048c5b0	255	game		
+0048c860	243	game		
+0048c960	106	game		
+0048c9d0	149	game		
+0048ca70	149	game		
+0048cb10	523	game		
+0048cd20	1592	game		
+0048d360	108	game		
+0048d3d0	498	game		
+0048d610	231	game		
+0048d700	219	game		reviewed
+0048d7e0	243	game		
+0048d8e0	1185	game		
+0048dd90	278	game		
+0048deb0	110	game		
+0048df20	763	game		
+0048e220	3479	game		
+0048efc0	290	game		
+0048f0f0	407	game		
+0048f290	443	game		
+0048f4c0	926	game		
+0048f860	27	stl	std::pow(float)	reviewed
+0048f880	181	game		
+0048f940	153	game		
+0048f9e0	203	game		reviewed
+0048fab0	78	game		
+0048fb00	94	game		
+0048fb60	90	game		
+0048fbc0	102	stl		STL throw helper
+0048fc30	115	game		
+0048fcb0	8	game		
+0048fcc0	107	game		
+0048fd30	196	game		
+0048fe00	124	game		
+0048fe80	203	game		
+0048ff50	147	game		
+00490000	76	game		
+00490050	38	game		
+00490080	157	stl	move_backward<string>	reviewed
+00490120	5904	game		
+00491870	20504	game		
+00496890	588	game		
+00496adc	95	crt	std::_Fac_node::~_Fac_node	runtime region
+00496b3b	39	crt		runtime region
+00496b62	46	crt	std::_Facet_Register	runtime region
+00496b90	6	crt	MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::showmanyc	runtime region
+00496b96	6	crt	MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::xsgetn	runtime region
+00496b9c	6	crt	MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::xsputn	runtime region
+00496ba2	6	crt	MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::_Lock	runtime region
+00496ba8	6	crt	MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::_Unlock	runtime region
+00496bae	6	crt	MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::uflow	runtime region
+00496bb4	6	crt	MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::setbuf	runtime region
+00496bba	6	crt	MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::sync	runtime region
+00496bc0	6	crt	MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::imbue	runtime region
+00496bc6	17	crt	__security_check_cookie	runtime region
+00496bd7	5	crt	API-MS-WIN-CRT-HEAP-L1-1-0.DLL::free	runtime region
+00496bdc	51	crt	operator_new	runtime region
+00496c0f	5	crt	API-MS-WIN-CRT-HEAP-L1-1-0.DLL::free	runtime region
+00496c14	9	crt		runtime region
+00496c1d	14	crt		runtime region
+00496c2b	35	crt		runtime region
+00496c4e	40	crt	___raise_securityfailure	runtime region
+00496c76	251	crt	___report_gsfailure	runtime region
+00496d71	12	crt	___report_rangecheckfailure	runtime region
+00496d7d	208	crt	___report_securityfailure	runtime region
+00496e4d	68	crt	find_pe_section	runtime region
+00496e91	53	crt	___scrt_acquire_startup_lock	runtime region
+00496ec6	57	crt	___scrt_initialize_crt	runtime region
+00496eff	150	crt	___scrt_initialize_onexit_tables	runtime region
+00496f96	104	crt		runtime region
+00496ffe	19	crt		runtime region
+00497011	18	crt		runtime region
+00497023	29	crt	___scrt_release_startup_lock	runtime region
+00497040	40	crt	___scrt_uninitialize_crt	runtime region
+00497068	59	crt	__onexit	runtime region
+004970a3	21	crt	_atexit	runtime region
+004970b8	14	crt		runtime region
+004970c6	94	crt	`eh_vector_destructor_iterator'	runtime region
+00497124	12	crt		runtime region
+00497130	16	crt		runtime region
+00497140	50	crt	__ArrayUnwind	runtime region
+00497172	41	crt		runtime region
+0049719b	18	crt		runtime region
+004971ad	79	crt	`eh_vector_constructor_iterator'	runtime region
+004971fc	6	crt		runtime region
+00497202	20	crt		runtime region
+00497216	191	crt		runtime region
+004972d6	29	crt		runtime region
+004972f3	28	crt		runtime region
+0049730f	63	crt		runtime region
+0049734e	70	crt		runtime region
+00497394	12	crt		runtime region
+004973a0	65	crt	__Init_thread_notify	runtime region
+004973e1	12	crt		runtime region
+004973ed	101	crt	__Init_thread_wait	runtime region
+00497507	307	crt		runtime region
+0049763a	20	crt		runtime region
+0049764e	47	crt		runtime region
+0049767d	10	crt	entry	runtime region
+00497687	6	crt	guard_check_icall	runtime region
+0049768d	33	crt		runtime region
+004976ae	24	crt		runtime region
+004976c6	33	crt		runtime region
+004976e7	24	crt		runtime region
+004976ff	17	crt		runtime region
+00497710	45	crt		runtime region
+0049773d	28	crt		runtime region
+0049775a	28	crt		runtime region
+00497777	417	crt		runtime region
+00497918	12	crt	___scrt_is_ucrt_dll_in_use	runtime region
+00497924	283	crt	___scrt_fastfail	runtime region
+00497a3f	51	crt	___scrt_get_show_window_mode	runtime region
+00497a72	3	crt		runtime region
+00497a75	68	crt	___scrt_is_managed_app	runtime region
+00497ab9	12	crt		runtime region
+00497ac5	64	crt		runtime region
+00497b10	70	crt	__SEH_prolog4	runtime region
+00497b56	21	crt	__SEH_epilog4	runtime region
+00497b6b	35	crt		runtime region
+00497b8e	156	crt	___security_init_cookie	runtime region
+00497c2a	4	crt		runtime region
+00497c2e	6	crt		runtime region
+00497c34	12	crt		runtime region
+00497c40	32	crt		runtime region
+00497c61	29	crt		runtime region
+00497c7e	12	crt		runtime region
+00497c8a	6	crt		runtime region
+00497c90	6	crt		runtime region
+00497c96	43	crt		runtime region
+00497cc1	43	crt		runtime region
+00497cec	6	crt	VCRUNTIME140.DLL::__std_exception_destroy	runtime region
+00497cf2	6	crt	VCRUNTIME140.DLL::__CxxFrameHandler3	runtime region
+00497cf8	6	crt	VCRUNTIME140.DLL::__vcrt_InitializeCriticalSectionEx	runtime region
+00497cfe	6	crt	VCRUNTIME140.DLL::__telemetry_main_invoke_trigger	runtime region
+00497d04	6	crt	VCRUNTIME140.DLL::__telemetry_main_return_trigger	runtime region
+00497d0a	6	crt	VCRUNTIME140.DLL::_CxxThrowException	runtime region
+00497d10	6	crt	VCRUNTIME140.DLL::memset	runtime region
+00497d16	6	crt	VCRUNTIME140.DLL::except_handler4_common	runtime region
+00497d1c	6	crt	API-MS-WIN-CRT-HEAP-L1-1-0.DLL::free	runtime region
+00497d22	6	crt	API-MS-WIN-CRT-HEAP-L1-1-0.DLL::malloc	runtime region
+00497d28	6	crt	API-MS-WIN-CRT-HEAP-L1-1-0.DLL::_callnewh	runtime region
+00497d2e	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::_initialize_narrow_environment	runtime region
+00497d34	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::initialize_onexit_table	runtime region
+00497d3a	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::register_onexit_function	runtime region
+00497d40	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::crt_atexit	runtime region
+00497d46	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::_cexit	runtime region
+00497d4c	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::terminate	runtime region
+00497d52	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::_seh_filter_exe	runtime region
+00497d58	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::_set_app_type	runtime region
+00497d5e	6	crt	API-MS-WIN-CRT-MATH-L1-1-0.DLL::__setusermatherr	runtime region
+00497d64	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::_configure_narrow_argv	runtime region
+00497d6a	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::get_narrow_winmain_command_line	runtime region
+00497d70	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::initterm	runtime region
+00497d76	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::initterm_e	runtime region
+00497d7c	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::exit	runtime region
+00497d82	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::_exit	runtime region
+00497d88	6	crt	API-MS-WIN-CRT-STDIO-L1-1-0.DLL::_set_fmode	runtime region
+00497d8e	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::_c_exit	runtime region
+00497d94	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::register_thread_local_exe_atexit_callback	runtime region
+00497d9a	6	crt	API-MS-WIN-CRT-LOCALE-L1-1-0.DLL::_configthreadlocale	runtime region
+00497da0	6	crt	API-MS-WIN-CRT-HEAP-L1-1-0.DLL::_set_new_mode	runtime region
+00497da6	6	crt	API-MS-WIN-CRT-STDIO-L1-1-0.DLL::__p__commode	runtime region
+00497dac	6	crt	API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::_controlfp_s	runtime region
+00497db2	6	crt	KERNEL32.DLL::IsProcessorFeaturePresent	runtime region
+00497db8	3	crt		runtime region
+00497dc0	45	crt	__alloca_probe	runtime region
+00497df0	385	crt		runtime region
+00497f8d	68	crt		runtime region
+00497fd1	273	crt		runtime region
+00498168	6	crt	VCRUNTIME140.DLL::memcpy	runtime region
+0049816e	6	crt	API-MS-WIN-CRT-MATH-L1-1-0.DLL::libm_sse2_cos_precise	runtime region
+00498174	6	crt	API-MS-WIN-CRT-MATH-L1-1-0.DLL::libm_sse2_log10_precise	runtime region
+0049817a	6	crt	API-MS-WIN-CRT-MATH-L1-1-0.DLL::libm_sse2_pow_precise	runtime region
+00498180	6	crt	API-MS-WIN-CRT-MATH-L1-1-0.DLL::libm_sse2_sin_precise	runtime region
+00498186	6	crt	API-MS-WIN-CRT-MATH-L1-1-0.DLL::libm_sse2_sqrt_precise	runtime region
+0049818c	6	crt	API-MS-WIN-CRT-MATH-L1-1-0.DLL::floor	runtime region
+00498192	6	crt	API-MS-WIN-CRT-MATH-L1-1-0.DLL::except1	runtime region
+004981a0	11	eh		unwind funclet
+00498220	8	eh		unwind funclet
+00498250	29	eh		unwind funclet
+0049826d	12	eh		unwind funclet
+00498279	9	eh		unwind funclet
+004982a0	8	eh		unwind funclet
+004982d0	8	eh		unwind funclet
+00498300	8	eh		unwind funclet
+00498308	7	eh		unwind funclet
+00498350	9	eh		unwind funclet
+00498380	8	eh		unwind funclet
+00498388	8	eh		unwind funclet
+004983c0	31	eh		unwind funclet
+004983df	31	eh		unwind funclet
+004983fe	11	eh		unwind funclet
+00498409	8	eh		unwind funclet
+00498411	11	eh		unwind funclet
+00498450	5	eh		unwind funclet
+00498455	5	eh		unwind funclet
+004984a0	25	eh		unwind funclet
+004984e0	8	eh		unwind funclet
+00498510	8	eh		unwind funclet
+00498518	7	eh		unwind funclet
+0049851f	7	eh		unwind funclet
+00498526	7	eh		unwind funclet
+00498560	7	eh		unwind funclet
+00498567	7	eh		unwind funclet
+00498590	7	eh		unwind funclet
+00498597	7	eh		unwind funclet
+004985c0	7	eh		unwind funclet
+004985f0	8	eh		unwind funclet
+00498620	8	eh		unwind funclet
+00498650	8	eh		unwind funclet
+00498680	8	eh		unwind funclet
+004986b0	11	eh		unwind funclet
+004986bb	8	eh		unwind funclet
+004986c3	8	eh		unwind funclet
+004986cb	8	eh		unwind funclet
+004986d3	8	eh		unwind funclet
+004986db	8	eh		unwind funclet
+00498710	8	eh		unwind funclet
+00498740	11	eh		unwind funclet
+0049874b	8	eh		unwind funclet
+00498753	8	eh		unwind funclet
+00498790	11	eh		unwind funclet
+0049879b	11	eh		unwind funclet
+004987a6	8	eh		unwind funclet
+004987ae	8	eh		unwind funclet
+004987b6	7	eh		unwind funclet
+004987f0	11	eh		unwind funclet
+004987fb	8	eh		unwind funclet
+00498803	8	eh		unwind funclet
+0049880b	8	eh		unwind funclet
+00498840	11	eh		unwind funclet
+0049884b	8	eh		unwind funclet
+00498853	8	eh		unwind funclet
+0049885b	8	eh		unwind funclet
+00498863	8	eh		unwind funclet
+0049886b	8	eh		unwind funclet
+00498873	7	eh		unwind funclet
+004988b0	11	eh		unwind funclet
+004988bb	11	eh		unwind funclet
+004988c6	8	eh		unwind funclet
+004988ce	11	eh		unwind funclet
+004988d9	11	eh		unwind funclet
+004988e4	11	eh		unwind funclet
+004988ef	11	eh		unwind funclet
+004988fa	11	eh		unwind funclet
+00498905	7	eh		unwind funclet
+00498940	11	eh		unwind funclet
+0049894b	11	eh		unwind funclet
+00498956	7	eh		unwind funclet
+0049895d	11	eh		unwind funclet
+00498968	7	eh		unwind funclet
+0049896f	11	eh		unwind funclet
+0049897a	7	eh		unwind funclet
+00498981	11	eh		unwind funclet
+0049898c	7	eh		unwind funclet
+00498993	11	eh		unwind funclet
+0049899e	7	eh		unwind funclet
+004989a5	11	eh		unwind funclet
+004989b0	7	eh		unwind funclet
+004989b7	11	eh		unwind funclet
+004989c2	7	eh		unwind funclet
+004989c9	11	eh		unwind funclet
+004989d4	7	eh		unwind funclet
+00498a10	8	eh		unwind funclet
+00498a40	8	eh		unwind funclet
+00498a48	8	eh		unwind funclet
+00498a50	7	eh		unwind funclet
+00498a57	8	eh		unwind funclet
+00498a5f	7	eh		unwind funclet
+00498a66	8	eh		unwind funclet
+00498a6e	8	eh		unwind funclet
+00498a76	7	eh		unwind funclet
+00498ab0	11	eh		unwind funclet
+00498af0	25	eh		unwind funclet
+00498b30	11	eh		unwind funclet
+00498b70	11	eh		unwind funclet
+00498b7b	11	eh		unwind funclet
+00498bb0	34	eh		unwind funclet
+00498c00	11	eh		unwind funclet
+00498c0b	8	eh		unwind funclet
+00498c40	11	eh		unwind funclet
+00498c4b	8	eh		unwind funclet
+00498c80	11	eh		unwind funclet
+00498c8b	11	eh		unwind funclet
+00498c96	11	eh		unwind funclet
+00498cd0	29	eh		unwind funclet
+00498ced	12	eh		unwind funclet
+00498cf9	9	eh		unwind funclet
+00498d20	11	eh		unwind funclet
+00498d2b	8	eh		unwind funclet
+00498d33	8	eh		unwind funclet
+00498d3b	8	eh		unwind funclet
+00498d43	8	eh		unwind funclet
+00498d4b	7	eh		unwind funclet
+00498d80	8	eh		unwind funclet
+00498d88	8	eh		unwind funclet
+00498d90	8	eh		unwind funclet
+00498d98	8	eh		unwind funclet
+00498da0	7	eh		unwind funclet
+00498da7	11	eh		unwind funclet
+00498de0	11	eh		unwind funclet
+00498deb	8	eh		unwind funclet
+00498df3	7	eh		unwind funclet
+00498e30	11	eh		unwind funclet
+00498e3b	8	eh		unwind funclet
+00498e70	8	eh		unwind funclet
+00498ea0	8	eh		unwind funclet
+00498ea8	8	eh		unwind funclet
+00498eb0	8	eh		unwind funclet
+00498ee0	8	eh		unwind funclet
+00498ee8	8	eh		unwind funclet
+00498ef0	11	eh		unwind funclet
+00498efb	11	eh		unwind funclet
+00498f06	8	eh		unwind funclet
+00498f0e	8	eh		unwind funclet
+00498f16	8	eh		unwind funclet
+00498f1e	11	eh		unwind funclet
+00498f29	8	eh		unwind funclet
+00498f31	8	eh		unwind funclet
+00498f39	11	eh		unwind funclet
+00498f44	11	eh		unwind funclet
+00498f4f	8	eh		unwind funclet
+00498f80	8	eh		unwind funclet
+00498f88	8	eh		unwind funclet
+00498f90	8	eh		unwind funclet
+00498fc0	8	eh		unwind funclet
+00498fc8	8	eh		unwind funclet
+00499000	8	eh		unwind funclet
+00499008	8	eh		unwind funclet
+00499010	8	eh		unwind funclet
+00499040	31	eh		unwind funclet
+00499090	11	eh		unwind funclet
+0049909b	8	eh		unwind funclet
+004990a3	8	eh		unwind funclet
+004990e0	26	eh		unwind funclet
+004990fa	12	eh		unwind funclet
+00499106	9	eh		unwind funclet
+0049910f	11	eh		unwind funclet
+0049911a	8	eh		unwind funclet
+00499122	7	eh		unwind funclet
+00499160	8	eh		unwind funclet
+00499168	8	eh		unwind funclet
+00499170	8	eh		unwind funclet
+00499178	8	eh		unwind funclet
+00499180	7	eh		unwind funclet
+00499187	8	eh		unwind funclet
+0049918f	7	eh		unwind funclet
+004991c0	26	eh		unwind funclet
+004991da	12	eh		unwind funclet
+004991e6	9	eh		unwind funclet
+004991ef	11	eh		unwind funclet
+004991fa	8	eh		unwind funclet
+00499202	7	eh		unwind funclet
+00499240	8	eh		unwind funclet
+00499248	8	eh		unwind funclet
+00499250	8	eh		unwind funclet
+00499258	8	eh		unwind funclet
+00499260	8	eh		unwind funclet
+00499268	8	eh		unwind funclet
+00499270	8	eh		unwind funclet
+00499278	8	eh		unwind funclet
+00499280	29	eh		unwind funclet
+0049929d	12	eh		unwind funclet
+004992a9	9	eh		unwind funclet
+004992b2	11	eh		unwind funclet
+004992bd	8	eh		unwind funclet
+004992c5	7	eh		unwind funclet
+00499300	8	eh		unwind funclet
+00499308	11	eh		unwind funclet
+00499313	8	eh		unwind funclet
+0049931b	11	eh		unwind funclet
+00499326	11	eh		unwind funclet
+00499331	8	eh		unwind funclet
+00499339	8	eh		unwind funclet
+00499341	11	eh		unwind funclet
+0049934c	19	eh		unwind funclet
+00499390	19	eh		unwind funclet
+004993d0	8	eh		unwind funclet
+004993d8	8	eh		unwind funclet
+004993e0	8	eh		unwind funclet
+004993e8	8	eh		unwind funclet
+00499420	8	eh		unwind funclet
+00499428	8	eh		unwind funclet
+00499460	8	eh		unwind funclet
+00499468	8	eh		unwind funclet
+00499470	8	eh		unwind funclet
+00499478	11	eh		unwind funclet
+00499483	8	eh		unwind funclet
+0049948b	8	eh		unwind funclet
+004994c0	5	eh		unwind funclet
+004994c5	5	eh		unwind funclet
+00499510	7	eh		unwind funclet
+00499540	8	eh		unwind funclet
+00499548	8	eh		unwind funclet
+00499550	7	eh		unwind funclet
+00499557	7	eh		unwind funclet
+00499580	8	eh		unwind funclet
+00499588	8	eh		unwind funclet
+00499590	7	eh		unwind funclet
+00499597	7	eh		unwind funclet
+004995c0	8	eh		unwind funclet
+004995f0	8	eh		unwind funclet
+00499620	8	eh		unwind funclet
+00499628	7	eh		unwind funclet
+0049962f	7	eh		unwind funclet
+00499636	7	eh		unwind funclet
+0049963d	7	eh		unwind funclet
+00499644	7	eh		unwind funclet
+0049964b	7	eh		unwind funclet
+00499680	5	eh		unwind funclet
+004996a0	7	eh		unwind funclet
+004996a7	7	eh		unwind funclet
+004996ae	7	eh		unwind funclet
+004996b5	7	eh		unwind funclet
+004996e0	7	eh		unwind funclet
+004996e7	7	eh		unwind funclet
+004996ee	7	eh		unwind funclet
+004996f5	7	eh		unwind funclet
+00499720	7	eh		unwind funclet
+00499727	7	eh		unwind funclet
+00499750	8	eh		unwind funclet
+00499758	8	eh		unwind funclet
+00499760	8	eh		unwind funclet
+00499768	8	eh		unwind funclet
+00499770	11	eh		unwind funclet
+0049977b	11	eh		unwind funclet
+00499786	11	eh		unwind funclet
+00499791	11	eh		unwind funclet
+0049979c	11	eh		unwind funclet
+004997a7	11	eh		unwind funclet
+004997b2	11	eh		unwind funclet
+004997bd	11	eh		unwind funclet
+004997c8	11	eh		unwind funclet
+004997d3	11	eh		unwind funclet
+004997de	8	eh		unwind funclet
+004997e6	8	eh		unwind funclet
+004997ee	11	eh		unwind funclet
+004997f9	8	eh		unwind funclet
+00499801	7	eh		unwind funclet
+00499808	11	eh		unwind funclet
+00499813	8	eh		unwind funclet
+0049981b	8	eh		unwind funclet
+00499823	8	eh		unwind funclet
+0049982b	8	eh		unwind funclet
+00499833	8	eh		unwind funclet
+0049983b	8	eh		unwind funclet
+00499843	8	eh		unwind funclet
+0049984b	8	eh		unwind funclet
+00499853	8	eh		unwind funclet
+0049985b	8	eh		unwind funclet
+00499863	8	eh		unwind funclet
+0049986b	8	eh		unwind funclet
+00499873	8	eh		unwind funclet
+0049987b	8	eh		unwind funclet
+00499883	8	eh		unwind funclet
+0049988b	8	eh		unwind funclet
+00499893	8	eh		unwind funclet
+0049989b	8	eh		unwind funclet
+004998a3	8	eh		unwind funclet
+004998ab	8	eh		unwind funclet
+004998b3	8	eh		unwind funclet
+004998bb	8	eh		unwind funclet
+004998c3	8	eh		unwind funclet
+004998cb	8	eh		unwind funclet
+004998d3	8	eh		unwind funclet
+004998db	8	eh		unwind funclet
+004998e3	8	eh		unwind funclet
+004998eb	8	eh		unwind funclet
+004998f3	8	eh		unwind funclet
+004998fb	11	eh		unwind funclet
+00499930	19	eh		unwind funclet
+00499970	11	eh		unwind funclet
+0049997b	11	eh		unwind funclet
+00499986	11	eh		unwind funclet
+00499991	11	eh		unwind funclet
+0049999c	11	eh		unwind funclet
+004999a7	11	eh		unwind funclet
+004999b2	11	eh		unwind funclet
+004999bd	11	eh		unwind funclet
+004999c8	11	eh		unwind funclet
+004999d3	11	eh		unwind funclet
+004999de	11	eh		unwind funclet
+004999e9	8	eh		unwind funclet
+004999f1	8	eh		unwind funclet
+004999f9	22	eh		unwind funclet
+00499a40	11	eh		unwind funclet
+00499a4b	11	eh		unwind funclet
+00499a56	11	eh		unwind funclet
+00499a61	11	eh		unwind funclet
+00499a6c	11	eh		unwind funclet
+00499a77	11	eh		unwind funclet
+00499a82	11	eh		unwind funclet
+00499a8d	11	eh		unwind funclet
+00499a98	11	eh		unwind funclet
+00499aa3	11	eh		unwind funclet
+00499aae	8	eh		unwind funclet
+00499ab6	8	eh		unwind funclet
+00499abe	22	eh		unwind funclet
+00499b00	11	eh		unwind funclet
+00499b0b	11	eh		unwind funclet
+00499b16	11	eh		unwind funclet
+00499b21	11	eh		unwind funclet
+00499b2c	11	eh		unwind funclet
+00499b37	11	eh		unwind funclet
+00499b42	11	eh		unwind funclet
+00499b4d	11	eh		unwind funclet
+00499b58	11	eh		unwind funclet
+00499b63	11	eh		unwind funclet
+00499b6e	11	eh		unwind funclet
+00499b79	11	eh		unwind funclet
+00499b84	11	eh		unwind funclet
+00499b8f	11	eh		unwind funclet
+00499b9a	11	eh		unwind funclet
+00499ba5	11	eh		unwind funclet
+00499bb0	8	eh		unwind funclet
+00499bb8	8	eh		unwind funclet
+00499bc0	22	eh		unwind funclet
+00499bd6	11	eh		unwind funclet
+00499be1	11	eh		unwind funclet
+00499bec	11	eh		unwind funclet
+00499bf7	11	eh		unwind funclet
+00499c02	11	eh		unwind funclet
+00499c0d	11	eh		unwind funclet
+00499c18	11	eh		unwind funclet
+00499c23	11	eh		unwind funclet
+00499c2e	11	eh		unwind funclet
+00499c39	11	eh		unwind funclet
+00499c44	11	eh		unwind funclet
+00499c4f	11	eh		unwind funclet
+00499c5a	11	eh		unwind funclet
+00499c65	11	eh		unwind funclet
+00499c70	11	eh		unwind funclet
+00499c7b	22	eh		unwind funclet
+00499c91	11	eh		unwind funclet
+00499c9c	22	eh		unwind funclet
+00499ce0	8	eh		unwind funclet
+00499ce8	19	eh		unwind funclet
+00499cfb	11	eh		unwind funclet
+00499d06	8	eh		unwind funclet
+00499d40	11	eh		unwind funclet
+00499d4b	11	eh		unwind funclet
+00499d56	11	eh		unwind funclet
+00499d61	11	eh		unwind funclet
+00499d6c	11	eh		unwind funclet
+00499d77	22	eh		unwind funclet
+00499dc0	11	eh		unwind funclet
+00499dcb	11	eh		unwind funclet
+00499dd6	11	eh		unwind funclet
+00499de1	11	eh		unwind funclet
+00499dec	22	eh		unwind funclet
+00499e02	11	eh		unwind funclet
+00499e0d	11	eh		unwind funclet
+00499e18	7	eh		unwind funclet
+00499e1f	11	eh		unwind funclet
+00499e2a	11	eh		unwind funclet
+00499e35	7	eh		unwind funclet
+00499e3c	11	eh		unwind funclet
+00499e47	11	eh		unwind funclet
+00499e52	7	eh		unwind funclet
+00499e59	11	eh		unwind funclet
+00499e64	11	eh		unwind funclet
+00499e6f	7	eh		unwind funclet
+00499e76	11	eh		unwind funclet
+00499e81	11	eh		unwind funclet
+00499e8c	7	eh		unwind funclet
+00499e93	11	eh		unwind funclet
+00499e9e	11	eh		unwind funclet
+00499ea9	7	eh		unwind funclet
+00499eb0	11	eh		unwind funclet
+00499ebb	11	eh		unwind funclet
+00499ec6	7	eh		unwind funclet
+00499ecd	11	eh		unwind funclet
+00499ed8	11	eh		unwind funclet
+00499ee3	7	eh		unwind funclet
+00499eea	11	eh		unwind funclet
+00499ef5	11	eh		unwind funclet
+00499f00	11	eh		unwind funclet
+00499f40	8	eh		unwind funclet
+00499f48	8	eh		unwind funclet
+00499f50	7	eh		unwind funclet
+00499f57	8	eh		unwind funclet
+00499f5f	8	eh		unwind funclet
+00499f67	7	eh		unwind funclet
+00499f6e	8	eh		unwind funclet
+00499f76	8	eh		unwind funclet
+00499f7e	7	eh		unwind funclet
+00499fb0	8	eh		unwind funclet
+00499fb8	8	eh		unwind funclet
+00499ff0	8	eh		unwind funclet
+00499ff8	8	eh		unwind funclet
+0049a000	8	eh		unwind funclet
+0049a008	8	eh		unwind funclet
+0049a010	8	eh		unwind funclet
+0049a018	8	eh		unwind funclet
+0049a020	8	eh		unwind funclet
+0049a050	8	eh		unwind funclet
+0049a058	8	eh		unwind funclet
+0049a060	8	eh		unwind funclet
+0049a068	8	eh		unwind funclet
+0049a070	8	eh		unwind funclet
+0049a078	8	eh		unwind funclet
+0049a080	8	eh		unwind funclet
+0049a088	11	eh		unwind funclet
+0049a0c0	8	eh		unwind funclet
+0049a0f0	8	eh		unwind funclet
+0049a0f8	8	eh		unwind funclet
+0049a130	8	eh		unwind funclet
+0049a160	8	eh		unwind funclet
+0049a168	8	eh		unwind funclet
+0049a170	11	eh		unwind funclet
+0049a17b	8	eh		unwind funclet
+0049a1b0	51	eh		unwind funclet
+0049a1e3	7	eh		unwind funclet
+0049a220	51	eh		unwind funclet
+0049a253	7	eh		unwind funclet
+0049a290	8	eh		unwind funclet
+0049a298	8	eh		unwind funclet
+0049a2a0	7	eh		unwind funclet
+0049a2d0	11	eh		unwind funclet
+0049a2db	8	eh		unwind funclet
+0049a2e3	7	eh		unwind funclet
+0049a320	11	eh		unwind funclet
+0049a32b	8	eh		unwind funclet
+0049a333	8	eh		unwind funclet
+0049a33b	11	eh		unwind funclet
+0049a346	11	eh		unwind funclet
+0049a351	11	eh		unwind funclet
+0049a35c	8	eh		unwind funclet
+0049a364	8	eh		unwind funclet
+0049a36c	7	eh		unwind funclet
+0049a373	7	eh		unwind funclet
+0049a37a	11	eh		unwind funclet
+0049a385	8	eh		unwind funclet
+0049a38d	8	eh		unwind funclet
+0049a395	11	eh		unwind funclet
+0049a3a0	7	eh		unwind funclet
+0049a3d0	11	eh		unwind funclet
+0049a3db	8	eh		unwind funclet
+0049a3e3	8	eh		unwind funclet
+0049a3eb	8	eh		unwind funclet
+0049a3f3	8	eh		unwind funclet
+0049a430	11	eh		unwind funclet
+0049a43b	8	eh		unwind funclet
+0049a443	8	eh		unwind funclet
+0049a44b	8	eh		unwind funclet
+0049a453	8	eh		unwind funclet
+0049a490	8	eh		unwind funclet
+0049a498	8	eh		unwind funclet
+0049a4a0	8	eh		unwind funclet
+0049a4d0	11	eh		unwind funclet
+0049a4db	8	eh		unwind funclet
+0049a4e3	8	eh		unwind funclet
+0049a4eb	8	eh		unwind funclet
+0049a4f3	8	eh		unwind funclet
+0049a4fb	11	eh		unwind funclet
+0049a506	8	eh		unwind funclet
+0049a50e	8	eh		unwind funclet
+0049a516	8	eh		unwind funclet
+0049a51e	8	eh		unwind funclet
+0049a526	11	eh		unwind funclet
+0049a531	8	eh		unwind funclet
+0049a539	8	eh		unwind funclet
+0049a541	8	eh		unwind funclet
+0049a549	8	eh		unwind funclet
+0049a551	11	eh		unwind funclet
+0049a55c	8	eh		unwind funclet
+0049a564	8	eh		unwind funclet
+0049a56c	8	eh		unwind funclet
+0049a574	8	eh		unwind funclet
+0049a57c	11	eh		unwind funclet
+0049a587	8	eh		unwind funclet
+0049a58f	8	eh		unwind funclet
+0049a597	8	eh		unwind funclet
+0049a59f	8	eh		unwind funclet
+0049a5a7	11	eh		unwind funclet
+0049a5b2	8	eh		unwind funclet
+0049a5ba	8	eh		unwind funclet
+0049a5c2	8	eh		unwind funclet
+0049a5ca	8	eh		unwind funclet
+0049a5d2	11	eh		unwind funclet
+0049a5dd	8	eh		unwind funclet
+0049a5e5	8	eh		unwind funclet
+0049a5ed	8	eh		unwind funclet
+0049a5f5	8	eh		unwind funclet
+0049a5fd	11	eh		unwind funclet
+0049a608	8	eh		unwind funclet
+0049a610	8	eh		unwind funclet
+0049a618	8	eh		unwind funclet
+0049a620	8	eh		unwind funclet
+0049a628	11	eh		unwind funclet
+0049a633	8	eh		unwind funclet
+0049a63b	8	eh		unwind funclet
+0049a643	8	eh		unwind funclet
+0049a64b	8	eh		unwind funclet
+0049a653	11	eh		unwind funclet
+0049a65e	11	eh		unwind funclet
+0049a669	11	eh		unwind funclet
+0049a674	11	eh		unwind funclet
+0049a67f	11	eh		unwind funclet
+0049a6c0	8	eh		unwind funclet
+0049a6c8	11	eh		unwind funclet
+0049a6d3	11	eh		unwind funclet
+0049a6de	8	eh		unwind funclet
+0049a6e6	8	eh		unwind funclet
+0049a6ee	11	eh		unwind funclet
+0049a6f9	8	eh		unwind funclet
+0049a701	8	eh		unwind funclet
+0049a709	8	eh		unwind funclet
+0049a711	11	eh		unwind funclet
+0049a71c	11	eh		unwind funclet
+0049a727	11	eh		unwind funclet
+0049a732	11	eh		unwind funclet
+0049a73d	11	eh		unwind funclet
+0049a748	11	eh		unwind funclet
+0049a753	11	eh		unwind funclet
+0049a790	7	eh		unwind funclet
+0049a7c0	15	eh		unwind funclet
+0049a7f0	15	eh		unwind funclet
+0049a820	11	eh		unwind funclet
+0049a82b	8	eh		unwind funclet
+0049a833	8	eh		unwind funclet
+0049a83b	7	eh		unwind funclet
+0049a870	8	eh		unwind funclet
+0049a878	19	eh		unwind funclet
+0049a8b0	8	eh		unwind funclet
+0049a8b8	8	eh		unwind funclet
+0049a8c0	8	eh		unwind funclet
+0049a8c8	8	eh		unwind funclet
+0049a900	8	eh		unwind funclet
+0049a908	8	eh		unwind funclet
+0049a910	8	eh		unwind funclet
+0049a918	11	eh		unwind funclet
+0049a923	8	eh		unwind funclet
+0049a92b	11	eh		unwind funclet
+0049a936	11	eh		unwind funclet
+0049a941	8	eh		unwind funclet
+0049a949	11	eh		unwind funclet
+0049a980	11	eh		unwind funclet
+0049a98b	8	eh		unwind funclet
+0049a993	8	eh		unwind funclet
+0049a99b	11	eh		unwind funclet
+0049a9a6	11	eh		unwind funclet
+0049a9b1	7	eh		unwind funclet
+0049a9e0	11	eh		unwind funclet
+0049aa20	62	init		global ctor/dtor region
+0049aa60	62	init		global ctor/dtor region
+0049aaa0	68	init		global ctor/dtor region
+0049aaf0	23	init		global ctor/dtor region
+0049ab10	5	init		global ctor/dtor region
+0049ab20	76	init		global ctor/dtor region
+0049ab70	62	init		global ctor/dtor region
+0049abb0	76	init		global ctor/dtor region
+0049abfc	10	init		global ctor/dtor region
