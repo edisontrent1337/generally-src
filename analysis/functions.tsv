@@ -1,4 +1,17 @@
 addr	size	class	label	reason
+00401000	48	init		dynamic initializer (initterm table)
+00401030	64	init		dynamic initializer (initterm table)
+00401070	64	init		dynamic initializer (initterm table)
+004010b0	48	init		dynamic initializer (initterm table)
+004010e0	48	init		dynamic initializer (initterm table)
+00401110	32	init		dynamic initializer (initterm table)
+00401130	32	init		dynamic initializer (initterm table)
+00401150	48	init		dynamic initializer (initterm table)
+00401180	48	init		dynamic initializer (initterm table)
+004011b0	64	init		dynamic initializer (initterm table)
+004011f0	32	init		dynamic initializer (initterm table)
+00401210	48	init		dynamic initializer (initterm table)
+00401240	16	init		dynamic initializer (initterm table)
 00401250	2453	game		
 00401bf0	261	game		
 00401d10	270	game		
@@ -210,7 +223,9 @@ addr	size	class	label	reason
 004486c0	23131	game		
 0044e120	2017	game		
 0044e910	891	game		
-0044fa10	372	game		
+0044ec90	2016	game		pointer-referenced (found by the recompiler)
+0044f470	1440	game		pointer-referenced (found by the recompiler)
+0044fa10	107932	game		
 0046a040	5428	game		
 0046b580	3847	game		
 0046c490	188	game		
@@ -263,7 +278,10 @@ addr	size	class	label	reason
 0046f2e0	52	crt	vsprintf (stdio.h inline)	reviewed
 0046f320	33	crt	sprintf (stdio.h inline)	reviewed
 0046f350	27	crt	sprintf (stdio.h inline)	reviewed
+0046f370	16	game		pointer-referenced (found by the recompiler)
+0046f380	176	game		pointer-referenced (found by the recompiler)
 0046f430	92	game		
+0046f490	64	game		pointer-referenced (found by the recompiler)
 0046f4d0	6	crt	__local_stdio_scanf_options	reviewed
 0046f4e0	38	crt	sscanf (stdio.h inline)	reviewed
 0046f510	111	game		reviewed
@@ -277,6 +295,7 @@ addr	size	class	label	reason
 0046faa0	185	game		reviewed
 0046fb60	393	game		
 0046fcf0	98	compiler	`vector deleting destructor' (0x3c-byte elements)	reviewed
+0046fd60	48	game		pointer-referenced (found by the recompiler)
 0046fd90	100	compiler	implicit dtor (0x3c-byte struct with string)	reviewed
 0046fe00	85	game		reviewed
 0046fe60	289	game		
@@ -329,8 +348,10 @@ addr	size	class	label	reason
 00473b00	979	game		
 00473ee0	2338	game		
 00474810	20	game		
+00474830	32	game		pointer-referenced (found by the recompiler)
 00474850	736	game		
 00474b30	117	game		
+00474bb0	64	game		pointer-referenced (found by the recompiler)
 00474bf0	529	game		
 00474e10	293	game		
 00474f40	935	game		
@@ -388,9 +409,11 @@ addr	size	class	label	reason
 00478ae0	173	stl	std::sort<NamedInt> _Pop_heap	reviewed
 00478b90	23	stl	std::fixed	reviewed
 00478bb0	26	stl	std::scientific	reviewed
+00478bd0	48	game		pointer-referenced (found by the recompiler)
 00478c00	68	game	struct ctor (int, int, byte, string)	reviewed
 00478c50	233	game	car struct ctor	reviewed
 00478d40	16809	game		
+0047cef0	32	game		pointer-referenced (found by the recompiler)
 0047cf10	55	compiler	implicit dtor (struct with string at +0x28)	reviewed
 0047cf50	764	game		
 0047d250	36	game		
@@ -483,15 +506,20 @@ addr	size	class	label	reason
 0048af80	569	game		
 0048b1c0	809	game		
 0048b4f0	61	game		
+0048b530	112	game		pointer-referenced (found by the recompiler)
 0048b5a0	943	game		
 0048b950	544	game		
 0048bb70	189	game		
 0048bc30	195	game		
 0048bd00	195	game		
 0048bdd0	195	game		
+0048bea0	432	game		pointer-referenced (found by the recompiler)
 0048c050	255	game		
+0048c150	432	game		pointer-referenced (found by the recompiler)
 0048c300	255	game		
+0048c400	432	game		pointer-referenced (found by the recompiler)
 0048c5b0	255	game		
+0048c6b0	432	game		pointer-referenced (found by the recompiler)
 0048c860	243	game		
 0048c960	106	game		
 0048c9d0	149	game		
@@ -500,6 +528,7 @@ addr	size	class	label	reason
 0048cd20	1592	game		
 0048d360	108	game		
 0048d3d0	498	game		
+0048d5d0	64	game		pointer-referenced (found by the recompiler)
 0048d610	231	game		
 0048d700	219	game		reviewed
 0048d7e0	243	game		
@@ -511,6 +540,7 @@ addr	size	class	label	reason
 0048efc0	290	game		
 0048f0f0	407	game		
 0048f290	443	game		
+0048f450	112	game		pointer-referenced (found by the recompiler)
 0048f4c0	926	game		
 0048f860	27	stl	std::pow(float)	reviewed
 0048f880	181	game		
@@ -586,6 +616,9 @@ addr	size	class	label	reason
 004973a0	65	crt	__Init_thread_notify	runtime region
 004973e1	12	crt		runtime region
 004973ed	101	crt	__Init_thread_wait	runtime region
+00497452	155	crt		runtime region
+004974ed	8	crt		runtime region
+004974f5	18	crt		runtime region
 00497507	307	crt		runtime region
 0049763a	20	crt		runtime region
 0049764e	47	crt		runtime region
@@ -669,58 +702,87 @@ addr	size	class	label	reason
 0049818c	6	crt	API-MS-WIN-CRT-MATH-L1-1-0.DLL::floor	runtime region
 00498192	6	crt	API-MS-WIN-CRT-MATH-L1-1-0.DLL::except1	runtime region
 004981a0	11	eh		unwind funclet
+004981ab	53	eh		exception handler thunk
+004981e0	32	eh		exception handler thunk
+00498200	32	eh		exception handler thunk
 00498220	8	eh		unwind funclet
+00498228	40	eh		exception handler thunk
 00498250	29	eh		unwind funclet
 0049826d	12	eh		unwind funclet
 00498279	9	eh		unwind funclet
+00498282	30	eh		exception handler thunk
 004982a0	8	eh		unwind funclet
+004982a8	40	eh		exception handler thunk
 004982d0	8	eh		unwind funclet
+004982d8	40	eh		exception handler thunk
 00498300	8	eh		unwind funclet
 00498308	7	eh		unwind funclet
+0049830f	33	eh		exception handler thunk
+00498330	32	eh		exception handler thunk
 00498350	9	eh		unwind funclet
+00498359	39	eh		exception handler thunk
 00498380	8	eh		unwind funclet
 00498388	8	eh		unwind funclet
+00498390	48	eh		exception handler thunk
 004983c0	31	eh		unwind funclet
 004983df	31	eh		unwind funclet
 004983fe	11	eh		unwind funclet
 00498409	8	eh		unwind funclet
 00498411	11	eh		unwind funclet
+0049841c	52	eh		exception handler thunk
 00498450	5	eh		unwind funclet
 00498455	5	eh		unwind funclet
+0049845a	38	eh		exception handler thunk
+00498480	32	eh		exception handler thunk
 004984a0	25	eh		unwind funclet
+004984b9	39	eh		exception handler thunk
 004984e0	8	eh		unwind funclet
+004984e8	40	eh		exception handler thunk
 00498510	8	eh		unwind funclet
 00498518	7	eh		unwind funclet
 0049851f	7	eh		unwind funclet
 00498526	7	eh		unwind funclet
+0049852d	51	eh		exception handler thunk
 00498560	7	eh		unwind funclet
 00498567	7	eh		unwind funclet
+0049856e	34	eh		exception handler thunk
 00498590	7	eh		unwind funclet
 00498597	7	eh		unwind funclet
+0049859e	34	eh		exception handler thunk
 004985c0	7	eh		unwind funclet
+004985c7	41	eh		exception handler thunk
 004985f0	8	eh		unwind funclet
+004985f8	40	eh		exception handler thunk
 00498620	8	eh		unwind funclet
+00498628	40	eh		exception handler thunk
 00498650	8	eh		unwind funclet
+00498658	40	eh		exception handler thunk
 00498680	8	eh		unwind funclet
+00498688	40	eh		exception handler thunk
 004986b0	11	eh		unwind funclet
 004986bb	8	eh		unwind funclet
 004986c3	8	eh		unwind funclet
 004986cb	8	eh		unwind funclet
 004986d3	8	eh		unwind funclet
 004986db	8	eh		unwind funclet
+004986e3	45	eh		exception handler thunk
 00498710	8	eh		unwind funclet
+00498718	40	eh		exception handler thunk
 00498740	11	eh		unwind funclet
 0049874b	8	eh		unwind funclet
 00498753	8	eh		unwind funclet
+0049875b	53	eh		exception handler thunk
 00498790	11	eh		unwind funclet
 0049879b	11	eh		unwind funclet
 004987a6	8	eh		unwind funclet
 004987ae	8	eh		unwind funclet
 004987b6	7	eh		unwind funclet
+004987bd	51	eh		exception handler thunk
 004987f0	11	eh		unwind funclet
 004987fb	8	eh		unwind funclet
 00498803	8	eh		unwind funclet
 0049880b	8	eh		unwind funclet
+00498813	45	eh		exception handler thunk
 00498840	11	eh		unwind funclet
 0049884b	8	eh		unwind funclet
 00498853	8	eh		unwind funclet
@@ -728,6 +790,7 @@ addr	size	class	label	reason
 00498863	8	eh		unwind funclet
 0049886b	8	eh		unwind funclet
 00498873	7	eh		unwind funclet
+0049887a	54	eh		exception handler thunk
 004988b0	11	eh		unwind funclet
 004988bb	11	eh		unwind funclet
 004988c6	8	eh		unwind funclet
@@ -737,6 +800,7 @@ addr	size	class	label	reason
 004988ef	11	eh		unwind funclet
 004988fa	11	eh		unwind funclet
 00498905	7	eh		unwind funclet
+0049890c	52	eh		exception handler thunk
 00498940	11	eh		unwind funclet
 0049894b	11	eh		unwind funclet
 00498956	7	eh		unwind funclet
@@ -754,7 +818,9 @@ addr	size	class	label	reason
 004989c2	7	eh		unwind funclet
 004989c9	11	eh		unwind funclet
 004989d4	7	eh		unwind funclet
+004989db	53	eh		exception handler thunk
 00498a10	8	eh		unwind funclet
+00498a18	40	eh		exception handler thunk
 00498a40	8	eh		unwind funclet
 00498a48	8	eh		unwind funclet
 00498a50	7	eh		unwind funclet
@@ -763,43 +829,59 @@ addr	size	class	label	reason
 00498a66	8	eh		unwind funclet
 00498a6e	8	eh		unwind funclet
 00498a76	7	eh		unwind funclet
+00498a7d	51	eh		exception handler thunk
 00498ab0	11	eh		unwind funclet
+00498abb	53	eh		exception handler thunk
 00498af0	25	eh		unwind funclet
+00498b09	39	eh		exception handler thunk
 00498b30	11	eh		unwind funclet
+00498b3b	53	eh		exception handler thunk
 00498b70	11	eh		unwind funclet
 00498b7b	11	eh		unwind funclet
+00498b86	42	eh		exception handler thunk
 00498bb0	34	eh		unwind funclet
+00498bd2	46	eh		exception handler thunk
 00498c00	11	eh		unwind funclet
 00498c0b	8	eh		unwind funclet
+00498c13	45	eh		exception handler thunk
 00498c40	11	eh		unwind funclet
 00498c4b	8	eh		unwind funclet
+00498c53	45	eh		exception handler thunk
 00498c80	11	eh		unwind funclet
 00498c8b	11	eh		unwind funclet
 00498c96	11	eh		unwind funclet
+00498ca1	47	eh		exception handler thunk
 00498cd0	29	eh		unwind funclet
 00498ced	12	eh		unwind funclet
 00498cf9	9	eh		unwind funclet
+00498d02	30	eh		exception handler thunk
 00498d20	11	eh		unwind funclet
 00498d2b	8	eh		unwind funclet
 00498d33	8	eh		unwind funclet
 00498d3b	8	eh		unwind funclet
 00498d43	8	eh		unwind funclet
 00498d4b	7	eh		unwind funclet
+00498d52	46	eh		exception handler thunk
 00498d80	8	eh		unwind funclet
 00498d88	8	eh		unwind funclet
 00498d90	8	eh		unwind funclet
 00498d98	8	eh		unwind funclet
 00498da0	7	eh		unwind funclet
 00498da7	11	eh		unwind funclet
+00498db2	46	eh		exception handler thunk
 00498de0	11	eh		unwind funclet
 00498deb	8	eh		unwind funclet
 00498df3	7	eh		unwind funclet
+00498dfa	54	eh		exception handler thunk
 00498e30	11	eh		unwind funclet
 00498e3b	8	eh		unwind funclet
+00498e43	45	eh		exception handler thunk
 00498e70	8	eh		unwind funclet
+00498e78	40	eh		exception handler thunk
 00498ea0	8	eh		unwind funclet
 00498ea8	8	eh		unwind funclet
 00498eb0	8	eh		unwind funclet
+00498eb8	40	eh		exception handler thunk
 00498ee0	8	eh		unwind funclet
 00498ee8	8	eh		unwind funclet
 00498ef0	11	eh		unwind funclet
@@ -813,24 +895,31 @@ addr	size	class	label	reason
 00498f39	11	eh		unwind funclet
 00498f44	11	eh		unwind funclet
 00498f4f	8	eh		unwind funclet
+00498f57	41	eh		exception handler thunk
 00498f80	8	eh		unwind funclet
 00498f88	8	eh		unwind funclet
 00498f90	8	eh		unwind funclet
+00498f98	40	eh		exception handler thunk
 00498fc0	8	eh		unwind funclet
 00498fc8	8	eh		unwind funclet
+00498fd0	48	eh		exception handler thunk
 00499000	8	eh		unwind funclet
 00499008	8	eh		unwind funclet
 00499010	8	eh		unwind funclet
+00499018	40	eh		exception handler thunk
 00499040	31	eh		unwind funclet
+0049905f	49	eh		exception handler thunk
 00499090	11	eh		unwind funclet
 0049909b	8	eh		unwind funclet
 004990a3	8	eh		unwind funclet
+004990ab	53	eh		exception handler thunk
 004990e0	26	eh		unwind funclet
 004990fa	12	eh		unwind funclet
 00499106	9	eh		unwind funclet
 0049910f	11	eh		unwind funclet
 0049911a	8	eh		unwind funclet
 00499122	7	eh		unwind funclet
+00499129	55	eh		exception handler thunk
 00499160	8	eh		unwind funclet
 00499168	8	eh		unwind funclet
 00499170	8	eh		unwind funclet
@@ -838,12 +927,14 @@ addr	size	class	label	reason
 00499180	7	eh		unwind funclet
 00499187	8	eh		unwind funclet
 0049918f	7	eh		unwind funclet
+00499196	42	eh		exception handler thunk
 004991c0	26	eh		unwind funclet
 004991da	12	eh		unwind funclet
 004991e6	9	eh		unwind funclet
 004991ef	11	eh		unwind funclet
 004991fa	8	eh		unwind funclet
 00499202	7	eh		unwind funclet
+00499209	55	eh		exception handler thunk
 00499240	8	eh		unwind funclet
 00499248	8	eh		unwind funclet
 00499250	8	eh		unwind funclet
@@ -858,6 +949,7 @@ addr	size	class	label	reason
 004992b2	11	eh		unwind funclet
 004992bd	8	eh		unwind funclet
 004992c5	7	eh		unwind funclet
+004992cc	52	eh		exception handler thunk
 00499300	8	eh		unwind funclet
 00499308	11	eh		unwind funclet
 00499313	8	eh		unwind funclet
@@ -867,32 +959,44 @@ addr	size	class	label	reason
 00499339	8	eh		unwind funclet
 00499341	11	eh		unwind funclet
 0049934c	19	eh		unwind funclet
+0049935f	49	eh		exception handler thunk
 00499390	19	eh		unwind funclet
+004993a3	45	eh		exception handler thunk
 004993d0	8	eh		unwind funclet
 004993d8	8	eh		unwind funclet
 004993e0	8	eh		unwind funclet
 004993e8	8	eh		unwind funclet
+004993f0	48	eh		exception handler thunk
 00499420	8	eh		unwind funclet
 00499428	8	eh		unwind funclet
+00499430	48	eh		exception handler thunk
 00499460	8	eh		unwind funclet
 00499468	8	eh		unwind funclet
 00499470	8	eh		unwind funclet
 00499478	11	eh		unwind funclet
 00499483	8	eh		unwind funclet
 0049948b	8	eh		unwind funclet
+00499493	45	eh		exception handler thunk
 004994c0	5	eh		unwind funclet
 004994c5	5	eh		unwind funclet
+004994ca	38	eh		exception handler thunk
+004994f0	32	eh		exception handler thunk
 00499510	7	eh		unwind funclet
+00499517	41	eh		exception handler thunk
 00499540	8	eh		unwind funclet
 00499548	8	eh		unwind funclet
 00499550	7	eh		unwind funclet
 00499557	7	eh		unwind funclet
+0049955e	34	eh		exception handler thunk
 00499580	8	eh		unwind funclet
 00499588	8	eh		unwind funclet
 00499590	7	eh		unwind funclet
 00499597	7	eh		unwind funclet
+0049959e	34	eh		exception handler thunk
 004995c0	8	eh		unwind funclet
+004995c8	40	eh		exception handler thunk
 004995f0	8	eh		unwind funclet
+004995f8	40	eh		exception handler thunk
 00499620	8	eh		unwind funclet
 00499628	7	eh		unwind funclet
 0049962f	7	eh		unwind funclet
@@ -900,17 +1004,22 @@ addr	size	class	label	reason
 0049963d	7	eh		unwind funclet
 00499644	7	eh		unwind funclet
 0049964b	7	eh		unwind funclet
+00499652	46	eh		exception handler thunk
 00499680	5	eh		unwind funclet
+00499685	27	eh		exception handler thunk
 004996a0	7	eh		unwind funclet
 004996a7	7	eh		unwind funclet
 004996ae	7	eh		unwind funclet
 004996b5	7	eh		unwind funclet
+004996bc	36	eh		exception handler thunk
 004996e0	7	eh		unwind funclet
 004996e7	7	eh		unwind funclet
 004996ee	7	eh		unwind funclet
 004996f5	7	eh		unwind funclet
+004996fc	36	eh		exception handler thunk
 00499720	7	eh		unwind funclet
 00499727	7	eh		unwind funclet
+0049972e	34	eh		exception handler thunk
 00499750	8	eh		unwind funclet
 00499758	8	eh		unwind funclet
 00499760	8	eh		unwind funclet
@@ -961,7 +1070,9 @@ addr	size	class	label	reason
 004998eb	8	eh		unwind funclet
 004998f3	8	eh		unwind funclet
 004998fb	11	eh		unwind funclet
+00499906	42	eh		exception handler thunk
 00499930	19	eh		unwind funclet
+00499943	45	eh		exception handler thunk
 00499970	11	eh		unwind funclet
 0049997b	11	eh		unwind funclet
 00499986	11	eh		unwind funclet
@@ -976,6 +1087,7 @@ addr	size	class	label	reason
 004999e9	8	eh		unwind funclet
 004999f1	8	eh		unwind funclet
 004999f9	22	eh		unwind funclet
+00499a0f	49	eh		exception handler thunk
 00499a40	11	eh		unwind funclet
 00499a4b	11	eh		unwind funclet
 00499a56	11	eh		unwind funclet
@@ -989,6 +1101,7 @@ addr	size	class	label	reason
 00499aae	8	eh		unwind funclet
 00499ab6	8	eh		unwind funclet
 00499abe	22	eh		unwind funclet
+00499ad4	44	eh		exception handler thunk
 00499b00	11	eh		unwind funclet
 00499b0b	11	eh		unwind funclet
 00499b16	11	eh		unwind funclet
@@ -1026,16 +1139,19 @@ addr	size	class	label	reason
 00499c7b	22	eh		unwind funclet
 00499c91	11	eh		unwind funclet
 00499c9c	22	eh		unwind funclet
+00499cb2	46	eh		exception handler thunk
 00499ce0	8	eh		unwind funclet
 00499ce8	19	eh		unwind funclet
 00499cfb	11	eh		unwind funclet
 00499d06	8	eh		unwind funclet
+00499d0e	50	eh		exception handler thunk
 00499d40	11	eh		unwind funclet
 00499d4b	11	eh		unwind funclet
 00499d56	11	eh		unwind funclet
 00499d61	11	eh		unwind funclet
 00499d6c	11	eh		unwind funclet
 00499d77	22	eh		unwind funclet
+00499d8d	51	eh		exception handler thunk
 00499dc0	11	eh		unwind funclet
 00499dcb	11	eh		unwind funclet
 00499dd6	11	eh		unwind funclet
@@ -1068,6 +1184,7 @@ addr	size	class	label	reason
 00499eea	11	eh		unwind funclet
 00499ef5	11	eh		unwind funclet
 00499f00	11	eh		unwind funclet
+00499f0b	53	eh		exception handler thunk
 00499f40	8	eh		unwind funclet
 00499f48	8	eh		unwind funclet
 00499f50	7	eh		unwind funclet
@@ -1077,8 +1194,10 @@ addr	size	class	label	reason
 00499f6e	8	eh		unwind funclet
 00499f76	8	eh		unwind funclet
 00499f7e	7	eh		unwind funclet
+00499f85	43	eh		exception handler thunk
 00499fb0	8	eh		unwind funclet
 00499fb8	8	eh		unwind funclet
+00499fc0	48	eh		exception handler thunk
 00499ff0	8	eh		unwind funclet
 00499ff8	8	eh		unwind funclet
 0049a000	8	eh		unwind funclet
@@ -1086,6 +1205,7 @@ addr	size	class	label	reason
 0049a010	8	eh		unwind funclet
 0049a018	8	eh		unwind funclet
 0049a020	8	eh		unwind funclet
+0049a028	40	eh		exception handler thunk
 0049a050	8	eh		unwind funclet
 0049a058	8	eh		unwind funclet
 0049a060	8	eh		unwind funclet
@@ -1094,24 +1214,33 @@ addr	size	class	label	reason
 0049a078	8	eh		unwind funclet
 0049a080	8	eh		unwind funclet
 0049a088	11	eh		unwind funclet
+0049a093	45	eh		exception handler thunk
 0049a0c0	8	eh		unwind funclet
+0049a0c8	40	eh		exception handler thunk
 0049a0f0	8	eh		unwind funclet
 0049a0f8	8	eh		unwind funclet
+0049a100	48	eh		exception handler thunk
 0049a130	8	eh		unwind funclet
+0049a138	40	eh		exception handler thunk
 0049a160	8	eh		unwind funclet
 0049a168	8	eh		unwind funclet
 0049a170	11	eh		unwind funclet
 0049a17b	8	eh		unwind funclet
+0049a183	45	eh		exception handler thunk
 0049a1b0	51	eh		unwind funclet
 0049a1e3	7	eh		unwind funclet
+0049a1ea	54	eh		exception handler thunk
 0049a220	51	eh		unwind funclet
 0049a253	7	eh		unwind funclet
+0049a25a	54	eh		exception handler thunk
 0049a290	8	eh		unwind funclet
 0049a298	8	eh		unwind funclet
 0049a2a0	7	eh		unwind funclet
+0049a2a7	41	eh		exception handler thunk
 0049a2d0	11	eh		unwind funclet
 0049a2db	8	eh		unwind funclet
 0049a2e3	7	eh		unwind funclet
+0049a2ea	54	eh		exception handler thunk
 0049a320	11	eh		unwind funclet
 0049a32b	8	eh		unwind funclet
 0049a333	8	eh		unwind funclet
@@ -1127,19 +1256,23 @@ addr	size	class	label	reason
 0049a38d	8	eh		unwind funclet
 0049a395	11	eh		unwind funclet
 0049a3a0	7	eh		unwind funclet
+0049a3a7	41	eh		exception handler thunk
 0049a3d0	11	eh		unwind funclet
 0049a3db	8	eh		unwind funclet
 0049a3e3	8	eh		unwind funclet
 0049a3eb	8	eh		unwind funclet
 0049a3f3	8	eh		unwind funclet
+0049a3fb	53	eh		exception handler thunk
 0049a430	11	eh		unwind funclet
 0049a43b	8	eh		unwind funclet
 0049a443	8	eh		unwind funclet
 0049a44b	8	eh		unwind funclet
 0049a453	8	eh		unwind funclet
+0049a45b	53	eh		exception handler thunk
 0049a490	8	eh		unwind funclet
 0049a498	8	eh		unwind funclet
 0049a4a0	8	eh		unwind funclet
+0049a4a8	40	eh		exception handler thunk
 0049a4d0	11	eh		unwind funclet
 0049a4db	8	eh		unwind funclet
 0049a4e3	8	eh		unwind funclet
@@ -1190,6 +1323,7 @@ addr	size	class	label	reason
 0049a669	11	eh		unwind funclet
 0049a674	11	eh		unwind funclet
 0049a67f	11	eh		unwind funclet
+0049a68a	54	eh		exception handler thunk
 0049a6c0	8	eh		unwind funclet
 0049a6c8	11	eh		unwind funclet
 0049a6d3	11	eh		unwind funclet
@@ -1206,19 +1340,26 @@ addr	size	class	label	reason
 0049a73d	11	eh		unwind funclet
 0049a748	11	eh		unwind funclet
 0049a753	11	eh		unwind funclet
+0049a75e	50	eh		exception handler thunk
 0049a790	7	eh		unwind funclet
+0049a797	41	eh		exception handler thunk
 0049a7c0	15	eh		unwind funclet
+0049a7cf	33	eh		exception handler thunk
 0049a7f0	15	eh		unwind funclet
+0049a7ff	33	eh		exception handler thunk
 0049a820	11	eh		unwind funclet
 0049a82b	8	eh		unwind funclet
 0049a833	8	eh		unwind funclet
 0049a83b	7	eh		unwind funclet
+0049a842	46	eh		exception handler thunk
 0049a870	8	eh		unwind funclet
 0049a878	19	eh		unwind funclet
+0049a88b	37	eh		exception handler thunk
 0049a8b0	8	eh		unwind funclet
 0049a8b8	8	eh		unwind funclet
 0049a8c0	8	eh		unwind funclet
 0049a8c8	8	eh		unwind funclet
+0049a8d0	48	eh		exception handler thunk
 0049a900	8	eh		unwind funclet
 0049a908	8	eh		unwind funclet
 0049a910	8	eh		unwind funclet
@@ -1228,13 +1369,16 @@ addr	size	class	label	reason
 0049a936	11	eh		unwind funclet
 0049a941	8	eh		unwind funclet
 0049a949	11	eh		unwind funclet
+0049a954	44	eh		exception handler thunk
 0049a980	11	eh		unwind funclet
 0049a98b	8	eh		unwind funclet
 0049a993	8	eh		unwind funclet
 0049a99b	11	eh		unwind funclet
 0049a9a6	11	eh		unwind funclet
 0049a9b1	7	eh		unwind funclet
+0049a9b8	40	eh		exception handler thunk
 0049a9e0	11	eh		unwind funclet
+0049a9eb	53	eh		exception handler thunk
 0049aa20	62	init		global ctor/dtor region
 0049aa60	62	init		global ctor/dtor region
 0049aaa0	68	init		global ctor/dtor region

@@ -1,0 +1,4 @@
+# Advanced options over the pause menu: two AI drivers, race started; Escape, down, Enter (Options);
+# sound set Funny, OK (back to the paused race; snap 1); again: language Suomi, OK (the race is autosaved,
+# everything reloaded and the autosave loaded; snap 2).
+script: 14000:click:430:96,14100:click:430:96,14300:click:328:64,14400:click:328:64,14500:click:328:64,14800:click:116:288,15000:click:560:464,21000:down:27,21100:up:27,21800:down:274,21900:up:274,22200:down:13,22300:up:13,23000:click:424:112,23500:click:352:152,24000:click:560:464,25000:snap:1,26000:down:27,26100:up:27,26800:down:274,26900:up:274,27200:down:13,27300:up:13,28000:click:424:88,28500:click:352:128,29000:click:560:464,31000:snap:2,32000:quit:0

@@ -1,0 +1,5 @@
+# As race (five drivers on Estio, the human Player driven for a while), with the fixture options, fuel
+# consumption raised (b0a = 0x20, options.set offset 0x0a: the "F" fuel warning) and damage on (b0b = 10).
+fixture: options.set
+patch: options.set a 200a
+script: 14000:click:430:96,14100:click:430:96,14200:click:430:96,14300:click:430:96,14400:click:430:96,14500:click:116:288,14700:click:560:464,21000:key:32,23000:down:273,33000:down:276,34000:up:276,38000:down:275,38800:up:275,45000:down:276,45500:up:276,52000:up:273,61000:quit:0

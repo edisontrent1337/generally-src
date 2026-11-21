@@ -1,0 +1,4 @@
+# Move to: create folder "xy"; in the folder drop-down pick [Default Tracks] (snap 1), select Estio, Move to
+# opens the folder list (snap 2); picking "xy" moves tracks\Estio.trk to tracks\xy\ and refills the list
+# (snap 3); the folder drop-down then shows xy with the moved track (snap 4).
+script: 14000:click:304:267,14500:key:120,14600:key:121,14900:click:240:304,15400:click:175:267,15900:click:160:320,16400:snap:1,16700:click:112:288,17000:click:144:424,17500:snap:2,17800:click:104:288,18300:snap:3,18600:click:175:267,19000:snap:4,19500:quit:0

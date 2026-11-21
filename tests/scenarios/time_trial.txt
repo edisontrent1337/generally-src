@@ -1,0 +1,4 @@
+# Time trial: a single AI driver (Blue), 2 laps on Estio; the ghost car records each lap; results screen
+# (snap 1). Escape opens the pause menu: "End season" (5× down, Enter; snap 2), back in the main menu a second
+# time trial loads the ghost saved by the first (snap 3).
+script: 14000:click:430:96,14300:click:328:64,14400:click:328:64,14500:click:328:64,14800:click:116:288,15000:click:560:464,21000:down:32,21200:up:32,80000:snap:1,81000:down:27,81100:up:27,81500:down:274,81600:up:274,81800:down:274,81900:up:274,82100:down:274,82200:up:274,82400:down:274,82500:up:274,82700:down:274,82800:up:274,83000:down:13,83100:up:13,84000:snap:2,84500:down:13,84600:up:13,86000:snap:3,86500:click:560:464,93000:down:32,93200:up:32,100000:snap:4,101000:quit:0

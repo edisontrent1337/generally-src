@@ -1,0 +1,4 @@
+# Save and load: save the race as "Autosave" from the pause menu (as save_game); the pause menu returns with
+# Save highlighted: End season (2x down, Enter, Enter = yes) back to the main menu (snap 1); Load, click
+# Autosave, Load: the saved race continues (snap 2, snap 3 a little later).
+script: 14000:click:430:96,14300:click:328:64,14400:click:328:64,14500:click:328:64,14800:click:116:288,15000:click:560:464,21000:down:32,21200:up:32,26000:down:27,26100:up:27,26500:down:274,26600:up:274,26800:down:274,26900:up:274,27100:down:274,27200:up:274,27500:down:13,27600:up:13,28500:click:270:140,29500:click:480:384,31000:down:13,31100:up:13,32500:down:274,32600:up:274,32800:down:274,32900:up:274,33200:down:13,33300:up:13,34000:down:13,34100:up:13,35500:snap:1,36000:click:384:464,36800:click:270:140,37300:click:480:384,39000:snap:2,41000:snap:3,42000:quit:0

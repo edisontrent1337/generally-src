@@ -1,0 +1,5 @@
+# Driver options with joystick-bound drivers (patched copies of Player.drv: axis +, axis -, button, hat;
+# JoyB has an unknown input kind for Steer right), then the AI skill slider of Blue, OK (saves).
+copy: drivers/Player.drv drivers/JoyA.drv, drivers/Player.drv drivers/JoyB.drv
+patch: drivers/JoyA.drv 50 ffffffffffffffffffffffffffffffff010000000200000000000000010000000200000000000100000000000300000000010000000000000000000000020000, drivers/JoyB.drv 50 ffffffffffffffffffffffffffffffff010000000200000000000000010000000200000000000100000000000300000000010000000000000000000000030000
+script: 14000:click:464:232,14500:click:240:312,15000:click:424:64,15500:click:420:120,16000:snap:1,16500:click:424:64,17000:click:420:136,17500:snap:2,18000:click:424:64,18500:click:420:88,19000:click:519:304,19200:click:519:304,19400:click:328:304,19600:snap:3,20000:click:560:464,22000:quit:0

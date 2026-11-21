@@ -1,0 +1,5 @@
+# options.set naming a palette that does not exist: the built-in default palette is used (snap 1). Then
+# Advanced options: palette list, pick Default, OK (the palette file is loaded again; snap 2).
+fixture: options.set
+patch: options.set 53 4e6f70616c0000
+script: 14000:snap:1,14500:click:240:464,15000:click:400:464,15500:click:424:64,16000:click:352:88,16500:click:560:464,17500:snap:2,18000:quit:0

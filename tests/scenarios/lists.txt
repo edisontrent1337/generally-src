@@ -1,0 +1,4 @@
+# A driver list long enough to scroll (12 extra drivers): wheel, scrollbar arrows, page up/down beside
+# the thumb, dragging the thumb; then select drivers from the scrolled list.
+copy: drivers/Blue.drv drivers/D01.drv, drivers/Blue.drv drivers/D02.drv, drivers/Blue.drv drivers/D03.drv, drivers/Blue.drv drivers/D04.drv, drivers/Blue.drv drivers/D05.drv, drivers/Blue.drv drivers/D06.drv, drivers/Blue.drv drivers/D07.drv, drivers/Blue.drv drivers/D08.drv, drivers/Blue.drv drivers/D09.drv, drivers/Blue.drv drivers/D10.drv, drivers/Blue.drv drivers/D11.drv, drivers/Blue.drv drivers/D12.drv
+script: 14000:click:430:112,14200:wheel:5,14300:wheel:5,14400:wheel:4,14600:click:520:208,14800:click:520:208,15000:click:520:96,15200:click:520:190,15400:click:520:110,15600:mdown:520:130,15700:move:520:150,15800:move:520:170,15900:mup:520:170,16100:click:430:96,16300:click:430:200,16500:snap:1,17000:quit:0

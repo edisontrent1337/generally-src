@@ -1,0 +1,3 @@
+# Options screens and a dialog: Options (sliders), Driver options (colour), Advanced (toggles, volume), OK;
+# then the Load dialog over the main menu: type into the filename field, cancel; Exit.
+script: 14000:click:240:464,14500:click:518:64,14700:click:518:64,15000:click:328:88,15300:click:518:272,15600:click:240:464,16000:click:518:112,16300:click:328:160,16600:click:240:464,17000:click:424:224,17300:click:328:312,17600:click:424:400,18000:click:560:464,19000:click:400:464,19500:click:375:336,19700:key:97,19800:key:98,19900:key:8,20000:key:99,20300:click:160:384,21000:click:80:464,23000:quit:0

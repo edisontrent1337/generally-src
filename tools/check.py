@@ -11,9 +11,12 @@ usage: tools/check.py [scenario ...] [--shadow all|addr,...] [--orig addr,...] [
              harness/rt/check.h); default: all rewritten functions, first 30 calls each (--shadow-n)
   --no-shadow  whole-run comparison only
   --orig     forward these rewritten functions to the original (bisecting a divergence)
-  --selftest run the original twice and require identical traces (harness determinism)
+  --selftest compare the plain recompiled original (build/gr_orig) with build/gr forwarding everything to
+             the original and without stack wiping: checks the hook layer and the harness determinism
+  --coverage also run the rewrite built with source coverage (build/gr_cov) and report which lines of
+             src/ no scenario executed (unverified code); --coverage-show FILE prints the annotated file
 """
-import argparse, concurrent.futures as cf, filecmp, os, shutil, subprocess, sys
+import argparse, concurrent.futures as cf, filecmp, os, re, shutil, subprocess, sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 GAME = os.path.join(ROOT, "game/orig")
@@ -38,10 +41,29 @@ def scenarios():
     return out
 
 
+WIPE = "0x4000"  # bytes of dead guest stack zeroed after each hooked call
+
+
 def run(binary, scen, tag, env_extra, timeout):
     d = os.path.join(OUT, scen["name"], tag)
     shutil.rmtree(d, ignore_errors=True)
     shutil.copytree(GAME, d)
+    for pair in scen.get("copy", "").split(","):  # "copy: from to, ..." or "from -> to" (names with spaces)
+        if pair.strip():
+            src, dst = [s.strip() for s in pair.split("->")] if "->" in pair else pair.split()
+            shutil.copyfile(os.path.join(d, src), os.path.join(d, dst))
+    for f in scen.get("fixture", "").split(","):  # "fixture: file, ..." copied from tests/fixtures
+        if f.strip():
+            shutil.copyfile(os.path.join(ROOT, "tests", "fixtures", f.strip()), os.path.join(d, f.strip()))
+    for f in scen.get("remove", "").split(","):  # "remove: file, file"
+        if f.strip() and os.path.exists(os.path.join(d, f.strip())):
+            os.remove(os.path.join(d, f.strip()))
+    for item in scen.get("patch", "").split(","):  # "patch: file offset hexbytes, ..." (offset in hex)
+        if item.strip():
+            f, off, data = item.split()
+            with open(os.path.join(d, f), "r+b") as fh:
+                fh.seek(int(off, 16))
+                fh.write(bytes.fromhex(data))
     env = dict(os.environ, SDL_VIDEODRIVER="dummy", SDL_AUDIODRIVER="dummy", GRX_HEADLESS="1", GRX_DET="1",
                GRX_TRACE="trace.txt", GRX_SCRIPT=scen["script"], GRX_TRACE_HEAP=scen.get("heap_every", "30"))
     env.update(env_extra)
@@ -110,7 +132,7 @@ def shadow_report(d):
     lines = open(log, errors="replace").read().splitlines()
     mism = [l for l in lines if l.startswith("SHADOW MISMATCH") or l.startswith("    ")
             or ("shadow" in l and "crashed" in l)]
-    summary = [l for l in lines if l.startswith("shadow ") and "calls" in l]
+    summary = [l for l in lines if re.match(r"shadow [0-9a-f]{8} .* calls \d+ checked", l)]
     return mism, summary
 
 
@@ -123,17 +145,32 @@ def main():
     ap.add_argument("--orig", default="")
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--timeout", type=int, default=900)
+    ap.add_argument("--no-build", action="store_true", help="skip `make` (both binaries must be current)")
+    ap.add_argument("--coverage", action="store_true")
+    ap.add_argument("--coverage-show", default="")
     a = ap.parse_args()
+    if a.coverage_show:
+        a.coverage = True
+    targets = ["all"] + (["build/gr_cov"] if a.coverage else [])
+    if not a.no_build and subprocess.run(["make", "-s", "-j8"] + targets, cwd=ROOT).returncode:
+        sys.exit("build failed")
     sc = scenarios()
     names = a.names or list(sc)
     for n in names:
         if n not in sc:
             sys.exit("unknown scenario %s (have: %s)" % (n, ", ".join(sc)))
         sc[n]["name"] = n
-    ref_bin = os.path.join(ROOT, "build/gr_orig")
-    new_bin = ref_bin if a.selftest else os.path.join(ROOT, "build/gr")
-    new_env = {}
-    if not a.selftest:
+    # The reference is the rewrite build with every rewritten function forwarded to the original, so that
+    # both runs pass the same hook points and wipe dead guest stack there identically (GRX_WIPE, see
+    # harness/rt/check.c). --selftest checks that this reference equals the plain recompiled original.
+    ref_bin = os.path.join(ROOT, "build/gr")
+    ref_env = {"GRX_ORIG": "all", "GRX_WIPE": WIPE}
+    new_bin = os.path.join(ROOT, "build/gr")
+    new_env = {"GRX_WIPE": WIPE}
+    if a.selftest:
+        ref_bin, ref_env = os.path.join(ROOT, "build/gr_orig"), {}
+        new_env = {"GRX_ORIG": "all"}
+    else:
         if a.orig:
             new_env["GRX_ORIG"] = a.orig
         if not a.no_shadow:
@@ -143,7 +180,7 @@ def main():
     with cf.ThreadPoolExecutor(max_workers=2 * len(names)) as ex:
         jobs = {}
         for n in names:
-            jobs[n] = (ex.submit(run, ref_bin, sc[n], "original", {}, a.timeout),
+            jobs[n] = (ex.submit(run, ref_bin, sc[n], "original", ref_env, a.timeout),
                        ex.submit(run, new_bin, sc[n], "rewrite", new_env, a.timeout))
         for n in names:
             (da, ra), (db, rb) = jobs[n][0].result(), jobs[n][1].result()
@@ -170,7 +207,37 @@ def main():
                 print("    shadow: %d functions compared call by call, %d not checkable" % (
                     checked, sum(1 for l in summary if "not checkable" in l)))
             ok = ok and not problems and not mism
+    if a.coverage:
+        coverage(sc, names, a)
     sys.exit(0 if ok else 1)
+
+
+def coverage(sc, names, a):
+    """Run the coverage build on every scenario and report unexecuted lines of src/."""
+    cov_bin = os.path.join(ROOT, "build/gr_cov")
+    prof_dir = os.path.join(OUT, "_coverage")
+    shutil.rmtree(prof_dir, ignore_errors=True)
+    os.makedirs(prof_dir)
+    with cf.ThreadPoolExecutor(max_workers=len(names)) as ex:
+        list(ex.map(lambda n: run(cov_bin, sc[n], "coverage", {
+            "LLVM_PROFILE_FILE": os.path.join(prof_dir, n + ".profraw")}, a.timeout), names))
+    raws = [os.path.join(prof_dir, f) for f in os.listdir(prof_dir) if f.endswith(".profraw")]
+    data = os.path.join(prof_dir, "all.profdata")
+    subprocess.run(["xcrun", "llvm-profdata", "merge", "-o", data] + raws, check=True)
+    src = os.path.join(ROOT, "src")
+    if a.coverage_show:
+        subprocess.run(["xcrun", "llvm-cov", "show", cov_bin, "-instr-profile", data, "-show-line-counts",
+                        os.path.join(ROOT, a.coverage_show)])
+        return
+    rep = subprocess.run(["xcrun", "llvm-cov", "report", cov_bin, "-instr-profile", data, src],
+                         capture_output=True, text=True).stdout
+    print("\ncoverage of the rewritten code (lines never executed by any scenario are unverified):")
+    for line in rep.splitlines():
+        f = line.split()
+        if len(f) >= 10 and (f[0].endswith((".cpp", ".h")) or f[0] in ("Filename", "TOTAL")):
+            # file, lines, missed lines, line coverage
+            print("  %-28s %6s %8s %8s" % (f[0], f[7], f[8], f[9]) if f[0] != "Filename" else
+                  "  %-28s %6s %8s %8s" % ("file", "lines", "missed", "cover"))
 
 
 if __name__ == "__main__":

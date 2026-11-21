@@ -18,6 +18,8 @@
 #include <cstring>
 #include <type_traits>
 
+#include "bridge/imports.h"
+
 extern "C" {
 #include "check.h"
 #include "cpu.h"
@@ -44,6 +46,21 @@ inline uint32_t addr(const void *p) {
 }
 
 inline CPU *cpu() { return chk_cpu; }
+
+// float -> int as the x86 instruction does it (cvttss2si): truncate; NaN and out of range give INT32_MIN.
+// (A plain C++ cast is undefined there and saturates on ARM.)
+inline int32_t to_int(float x) { return trunc_f4_4(x); }
+inline int32_t to_int(double x) { return trunc_f8_4(x); }
+// the CRT float -> 64-bit integer helper (0x497df0, argument in xmm0): truncates; NaN and out-of-range
+// values give INT64_MIN like cvttss2si with a 64-bit destination
+inline int64_t to_int64(float x) {
+    if (!(x > -9223372036854775808.0f && x < 9223372036854775808.0f)) return INT64_MIN;
+    return static_cast<int64_t>(x);
+}
+
+// operator new / sized operator delete of the original (its heap, so block addresses match)
+inline void *op_new(uint32_t n);
+inline void op_delete(void *p, uint32_t n);
 
 }  // namespace guest
 
@@ -79,6 +96,7 @@ template <class T> inline T *edx(CPU *c) { return EDX ? &guest::at<T>(EDX) : nul
 inline float xmm(CPU *c, int n) { return XMM_F(n, 0); }
 inline void ret(CPU *c, uint32_t v) { EAX = v; }
 inline void ret_ptr(CPU *c, const void *p) { EAX = guest::addr(p); }
+inline void ret_bool(CPU *c, bool b) { EAX = b; }  // with RET_AL
 inline void ret_st0(CPU *c, double v) { fpu_push(c, v); }
 inline void ret_xmm0(CPU *c, float v) { XMM_F(0, 0) = v; }
 }  // namespace abi
@@ -117,10 +135,15 @@ template <class... A> inline uint32_t call_regs(uint32_t fn, uint32_t ecx, uint3
     return guest_call(c, fn, args.n, args.v);
 }
 template <class... A> inline uint32_t call_cdecl(uint32_t fn, A... a) { return call_regs(fn, 0, 0, a...); }
+// an imported function (SDL, CRT, Windows), through its import table slot (bridge/imports.h)
+template <class... A> inline uint32_t call_import(uint32_t slot, A... a) { return call_regs(at<uint32_t>(slot), 0, 0, a...); }
 template <class... A> inline uint32_t call_stdcall(uint32_t fn, A... a) { return call_regs(fn, 0, 0, a...); }
 template <class S, class... A> inline uint32_t call_thiscall(uint32_t fn, S *self, A... a) {
     return call_regs(fn, addr(self), 0, a...);
 }
+inline void *op_new(uint32_t n) { return host(call_cdecl(0x496bdc, n)); }
+inline void op_delete(void *p, uint32_t n) { call_cdecl(0x496c1d, p, n); }
+
 // result of a function returning float/double in x87 ST0 (popped)
 inline double st0() { CPU *c = cpu(); double v = ST0_D; fpu_pop(c); return v; }
 inline float xmm0() { CPU *c = cpu(); return XMM_F(0, 0); }
@@ -142,5 +165,18 @@ template <class T> struct Local {
     T *operator->() const { return get(); }
     T &operator*() const { return *get(); }
 };
+
+// A function-local static's thread-safe first use, as MSVC compiles it: when the guard (a guest int) is
+// newer than this thread's epoch (TLS block + 4), _Init_thread_header (0x49734e) claims it; a guard
+// of -1 then means this thread initialises: init(), then _Init_thread_footer (0x49730f).
+template <class F> void static_init(uint32_t guard, F init) {
+    CPU *c = cpu();
+    const uint32_t tls = at<uint32_t>(at<uint32_t>(FS_BASE + 0x2c));
+    if (at<int32_t>(guard) <= at<int32_t>(tls + 4)) return;
+    call_cdecl(0x49734e, guard);
+    if (at<int32_t>(guard) != -1) return;
+    init();
+    call_cdecl(0x49730f, guard);
+}
 
 }  // namespace guest

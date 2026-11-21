@@ -31,12 +31,18 @@ SRC_CXX  := $(shell find src -name '*.cpp' 2>/dev/null)
 LIFT_O   := $(patsubst $(LIFT)/%.c,$(OBJ)/lift/%.o,$(LIFT_C))
 RT_O     := $(patsubst harness/rt/%.c,$(OBJ)/rt/%.o,$(RT_C))
 SRC_O    := $(patsubst src/%.cpp,$(OBJ)/src/%.o,$(SRC_CXX))
+COV_O    := $(patsubst src/%.cpp,$(OBJ)/cov/%.o,$(SRC_CXX))
+COVF     := -fprofile-instr-generate -fcoverage-mapping
 
 all: build/gr build/gr_orig
 
 build/gr: $(LIFT_O) $(RT_O) $(SRC_O)
 	$(CXX) -o $@ $^ $(SDLLD) $(LDFLAGS)
 	@echo built $@
+
+# the rewrite with source coverage of src/ (tools/check.py --coverage)
+build/gr_cov: $(LIFT_O) $(RT_O) $(COV_O)
+	$(CXX) $(COVF) -o $@ $^ $(SDLLD) $(LDFLAGS)
 
 build/gr_orig: $(LIFT_O) $(RT_O)
 	$(CC) -o $@ $^ $(SDLLD) $(LDFLAGS)
@@ -52,6 +58,10 @@ $(OBJ)/rt/%.o: harness/rt/%.c $(wildcard harness/rt/*.h)
 $(OBJ)/src/%.o: src/%.cpp $(shell find src -name '*.h' 2>/dev/null) $(wildcard harness/rt/*.h) $(LIFT)/funcs.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -I$(LIFT) -c $< -o $@
+
+$(OBJ)/cov/%.o: src/%.cpp $(shell find src -name '*.h' 2>/dev/null) $(wildcard harness/rt/*.h) $(LIFT)/funcs.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(COVF) -I$(LIFT) -c $< -o $@
 
 # ---------------------------------------------------------------- one-time recompilation of the original
 $(PCODE): $(EXE) tools/ghidra/ExportPcode.java

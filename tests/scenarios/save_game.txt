@@ -1,0 +1,3 @@
+# Save game from the pause menu (Escape, 3x down, Enter): clicking "Autosave" in the file list puts the
+# name in the text field (snap 1); Save (snap 2), Enter, back in the race (snap 3).
+script: 14000:click:430:96,14300:click:328:64,14400:click:328:64,14500:click:328:64,14800:click:116:288,15000:click:560:464,21000:down:32,21200:up:32,26000:down:27,26100:up:27,26500:down:274,26600:up:274,26800:down:274,26900:up:274,27100:down:274,27200:up:274,27500:down:13,27600:up:13,28500:click:270:140,29000:snap:1,29500:click:480:384,30500:snap:2,31000:down:13,31100:up:13,32500:snap:3,33000:quit:0

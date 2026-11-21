@@ -1,0 +1,3 @@
+# A complete 1-lap race of two AI drivers. Mid-race the pause menu is driven by keyboard (arrows, Enter
+# opens Options, Escape cancels, Enter resumes); then the results screen, left with Escape.
+script: 14000:click:430:96,14100:click:430:96,14300:click:328:64,14400:click:328:64,14500:click:328:64,14600:click:328:64,14800:click:116:288,15000:click:560:464,21000:down:32,21200:up:32,24000:down:27,24100:up:27,24500:down:274,24600:up:274,25000:down:274,25100:up:274,25500:down:273,25600:up:273,26000:down:274,26100:up:274,26500:down:13,26600:up:13,28000:down:27,28100:up:27,29000:down:273,29100:up:273,29500:down:273,29600:up:273,30000:down:13,30100:up:13,60000:down:27,60100:up:27,63000:snap:1,64000:quit:0

@@ -1,0 +1,3 @@
+# Options: cycle Race length (laps/km/minutes) and Starting order through all states, OK (writes gr.ini);
+# then the Create driver dialog's Type button (human/computer) twice, Cancel.
+script: 14000:click:240:464,14500:click:424:160,14700:click:424:160,14900:click:424:160,15100:click:424:160,15300:click:424:184,15500:click:424:184,15700:click:424:184,15900:click:424:184,16100:click:560:464,17000:click:464:232,17500:click:368:256,17700:click:368:256,17900:click:368:256,18200:click:240:312,19000:quit:0

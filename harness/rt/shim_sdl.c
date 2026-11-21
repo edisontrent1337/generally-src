@@ -853,6 +853,7 @@ static void ev_push(const uint8_t *e) {
 }
 
 // headless test input: GRX_SCRIPT="t:click:x:y,t:key:sym,t:down:sym,t:up:sym,t:snap:n,t:quit:0,..."
+//   mouse: click:x:y (left press+release), mdown:x:y / move:x:y / mup:x:y (drag), rclick:x:y, wheel:4|5
 // t = ms since SDL_Init (virtual time with GRX_DET=1, so runs are reproducible)
 static void script_events(void) {
     static const char *p;
@@ -863,7 +864,9 @@ static void script_events(void) {
         char kind[16] = {0};
         int a = 0, b = 0, n = 0;
         if (sscanf(p, "%u:%15[a-z]:%d:%d%n", &ms, kind, &a, &b, &n) < 3) { p = NULL; return; }
-        if (strcmp(kind, "click") && n == 0) sscanf(p, "%u:%15[a-z]:%d%n", &ms, kind, &a, &n);
+        int two = !strcmp(kind, "click") || !strcmp(kind, "rclick") || !strcmp(kind, "mdown") || !strcmp(kind, "move") ||
+                  !strcmp(kind, "mup");
+        if (!two && n == 0) sscanf(p, "%u:%15[a-z]:%d%n", &ms, kind, &a, &n);
         if ((plat_ticks_us() - t0_us) / 1000 < ms) return;   // ms since SDL_Init (virtual with GRX_DET=1)
         p += n;
         if (*p == ',') p++;
@@ -877,7 +880,24 @@ static void script_events(void) {
             sdl_debug_snapshot(fn);
             continue;
         }
-        if (!strcmp(kind, "click")) {
+        static uint8_t held;   // scripted mouse buttons held (bit 0 left)
+        if (!strcmp(kind, "mdown") || !strcmp(kind, "move") || !strcmp(kind, "mup") || !strcmp(kind, "rclick") ||
+            !strcmp(kind, "wheel")) {
+            uint16_t x = (uint16_t)a, y = (uint16_t)b;
+            if (!strcmp(kind, "wheel")) { x = 0; y = 0; }
+            memcpy(ev + 4, &x, 2); memcpy(ev + 6, &y, 2);
+            if (strcmp(kind, "wheel")) { ev[0] = 4; ev[2] = held; ev_push(ev); }   // motion to the spot
+            if (!strcmp(kind, "mdown")) { held |= 1; ev[0] = 5; ev[2] = 1; ev[3] = 1; ev_push(ev); }
+            if (!strcmp(kind, "mup")) { held &= (uint8_t)~1; ev[0] = 6; ev[2] = 1; ev[3] = 0; ev_push(ev); }
+            if (!strcmp(kind, "rclick")) {
+                ev[0] = 5; ev[2] = 3; ev[3] = 1; ev_push(ev);
+                ev[0] = 6; ev[3] = 0; ev_push(ev);
+            }
+            if (!strcmp(kind, "wheel")) {
+                ev[0] = 5; ev[2] = (uint8_t)a; ev[3] = 1; ev_push(ev);
+                ev[0] = 6; ev[3] = 0; ev_push(ev);
+            }
+        } else if (!strcmp(kind, "click")) {
             uint16_t x = (uint16_t)a, y = (uint16_t)b;
             memcpy(ev + 4, &x, 2); memcpy(ev + 6, &y, 2);
             ev[2] = 1;

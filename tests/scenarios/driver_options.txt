@@ -1,0 +1,4 @@
+# Driver options: create driver "zed" (Create driver dialog: type the name, OK), pick Player and then Blue (an
+# AI driver) from the driver dropdown, back to zed, rebind Accelerate to W, raise a colour, Driver stats,
+# OK (writes the driver files, compared with the original's).
+script: 14000:click:464:232,14500:key:122,14600:key:101,14700:key:100,14900:click:400:312,15500:click:424:64,16000:click:420:136,16500:click:424:64,17000:click:420:88,17500:click:424:64,18000:wheel:5,18200:wheel:5,18500:click:420:168,19000:click:432:304,19500:down:119,19600:up:119,20000:click:519:112,20200:click:519:112,20500:click:480:428,21500:snap:1,22000:down:27,22100:up:27,22500:click:560:464,24000:snap:2,25000:quit:0

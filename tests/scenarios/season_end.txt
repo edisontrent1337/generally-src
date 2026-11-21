@@ -1,0 +1,4 @@
+# A one-track season of two AI drivers (1 lap) run to the end: race results (snap 1), Enter: season
+# results (snap 2) — the drivers' season counts and places are updated and their files saved; Enter
+# again (snap 3).
+script: 14000:click:430:96,14100:click:430:96,14300:click:328:64,14400:click:328:64,14500:click:328:64,14600:click:328:64,14800:click:116:288,15000:click:560:464,21000:down:32,21200:up:32,60000:snap:1,61000:down:13,61100:up:13,63000:snap:2,64000:down:13,64100:up:13,66000:snap:3,67000:quit:0

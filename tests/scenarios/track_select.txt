@@ -1,0 +1,4 @@
+# Track list selection (4 columns: Estio Ohful Plot Rahli / Surkit): click Estio, Shift+click Rahli (all
+# four marked; snap 1), Shift+click Plot (the range shrinks, Rahli unmarked; snap 2), Ctrl+click Surkit
+# (only it stays marked; snap 3), Shift+click Ohful (a new range from the previous selection; snap 4).
+script: 14000:click:112:288,14400:down:304,14500:click:448:288,14700:up:304,15000:snap:1,15200:down:303,15300:click:336:288,15500:up:303,15800:snap:2,16000:down:306,16100:click:112:304,16300:up:306,16600:snap:3,16800:down:304,16900:click:224:288,17100:up:304,17400:snap:4,17800:quit:0

@@ -1,0 +1,3 @@
+# Season standings between races: two AI drivers, 1 lap, two tracks. The first race runs to the end
+# (results, snap 1); Enter shows the standings with points (snap 2); Enter starts the second race (snap 3).
+script: 14000:click:430:96,14100:click:430:96,14300:click:328:64,14400:click:328:64,14500:click:328:64,14600:click:328:64,14800:click:116:288,14900:click:229:288,15000:click:560:464,21000:down:32,21200:up:32,70000:snap:1,71000:down:13,71100:up:13,73000:snap:2,74000:down:13,74100:up:13,76000:snap:3,77000:quit:0

@@ -1,0 +1,3 @@
+# Pause menu: two AI drivers, 2 laps. Replay (Escape, down, Enter; snap 1 during the replay; Escape leaves
+# it), then End race (Escape, 4× down, Enter; snap 2: confirmation; Enter = yes), results (snap 3).
+script: 14000:click:430:96,14100:click:430:96,14300:click:328:64,14400:click:328:64,14500:click:328:64,14800:click:116:288,15000:click:560:464,21000:down:32,21200:up:32,30000:down:27,30100:up:27,30500:down:274,30600:up:274,31000:down:13,31100:up:13,33000:snap:1,34000:down:27,34100:up:27,36000:down:27,36100:up:27,36500:down:274,36600:up:274,36800:down:274,36900:up:274,37100:down:274,37200:up:274,37400:down:274,37500:up:274,37800:down:13,37900:up:13,38500:snap:2,39000:down:13,39100:up:13,41000:snap:3,42000:quit:0

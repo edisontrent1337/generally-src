@@ -1,0 +1,4 @@
+# A race with a human driver: add Player and Blue, pick the first track, Start; through the info box,
+# drive a little with the arrow keys (accelerate, steer; snap 1). Pause, Options (down, down, up, down,
+# Enter), Escape: closing it re-applies the drivers' controls to the cars; Resume (up, up, Enter; snap 2).
+script: 14000:click:430:144,14300:click:430:96,14500:click:112:288,14800:click:560:464,21000:key:32,23000:down:273,24000:down:276,24800:up:276,26000:up:273,27000:snap:1,27500:down:27,27600:up:27,28000:down:274,28100:up:274,28400:down:274,28500:up:274,28800:down:273,28900:up:273,29200:down:274,29300:up:274,29600:down:13,29700:up:13,31000:down:27,31100:up:27,32000:down:273,32100:up:273,32400:down:273,32500:up:273,32800:down:13,32900:up:13,34000:snap:2,35000:quit:0

@@ -1,0 +1,3 @@
+# Main menu car dropdown: add a driver, click its car button (snap 1: the list of cars), pick Mini
+# (the driver file is saved with the new car; snap 2).
+script: 14000:click:430:96,14500:click:188:100,15000:snap:1,15500:click:167:198,16000:snap:2,16500:quit:0

@@ -1,0 +1,3 @@
+# Main menu: Start with nothing selected (message box); "[all tracks]" folder (tracks in subfolders);
+# random selection of 1, then 3 tracks; Start without drivers (message box).
+script: 14000:click:560:464,14500:snap:1,14600:click:320:280,15000:click:176:267,15500:click:140:288,16000:snap:2,16200:click:368:424,16700:click:543:424,16900:click:543:424,17200:click:368:424,17700:snap:3,18000:click:560:464,18500:click:320:280,19000:quit:0

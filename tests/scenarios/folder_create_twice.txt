@@ -1,0 +1,3 @@
+# Create folder "xy" (it is added and marked; snap 1), then Create folder "xy" again: mkdir fails, so the
+# message box appears (snap 2), OK; then Cancel on the input box (snap 3).
+script: 14000:click:304:267,14500:key:120,14600:key:121,14900:click:240:304,15400:snap:1,15600:click:304:267,16100:key:120,16200:key:121,16500:click:240:304,17000:snap:2,17200:click:320:280,17700:click:304:267,18100:click:400:304,18500:snap:3,19000:quit:0

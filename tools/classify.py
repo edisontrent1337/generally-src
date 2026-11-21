@@ -165,6 +165,27 @@ def load():
         a = int(r[0], 16)
         F[a] = dict(name=r[1], size=int(r[2]), callers={int(x, 16) for x in r[4].split(",") if x},
                     callees=[c for c in r[5].split(",") if c], strings=r[6])
+    # Functions Ghidra did not create (reached only through pointers: widget callbacks, vtables) but the
+    # recompiler lifted: size = distance to the next known function start.
+    lifted = sorted(int(m, 16) for m in re.findall(r"^void ORIG_([0-9a-f]+)\(", open(
+        os.path.join(ROOT, "build/lift/funcs.h")).read(), re.M))
+    # Ghidra stops 0x44fa10 at its switch; the function runs up to its jump table at 0x469fac
+    if 0x44FA10 in F:
+        F[0x44FA10]["size"] = 0x469FAC - 0x44FA10
+    ghidra = sorted(F)
+    def inside(a):  # start of the Ghidra function containing a (jump-table targets get lifted separately)
+        import bisect
+        i = bisect.bisect_right(ghidra, a) - 1
+        return ghidra[i] if i >= 0 and a < ghidra[i] + F[ghidra[i]]["size"] else None
+    starts = sorted(set(F) | set(lifted))
+    for i, a in enumerate(starts):
+        if a not in F:
+            host = inside(a)
+            if host is not None:  # a case block of host's switch: not a function of its own
+                continue
+            nxt = starts[i + 1] if i + 1 < len(starts) else a + 16
+            F[a] = dict(name="FUN_%08x" % a, size=nxt - a, callers=set(), callees=[], strings="",
+                        lifted_only=True)
     src = open(os.path.join(ROOT, "build/decomp.c")).read()
     parts = re.split(r"\n//==== (\S+) @ ([0-9a-f]{8})\n", "\n" + src)
     body = {int(parts[i + 1], 16): parts[i + 2] for i in range(1, len(parts), 3)}
@@ -206,9 +227,15 @@ def classify(F, body):
                all(cls.get(c) in ("stl", "crt") for c in internal):
                 cls[a], why[a] = "stl", "only used by STL code"
                 changed = True
+    for a, f in F.items():
+        if f.get("lifted_only") and a not in cls:
+            if a < 0x401250:
+                cls[a], why[a] = "init", "dynamic initializer (initterm table)"
+            elif CRT_HI <= a < INIT_LO:
+                cls[a], why[a] = "eh", "exception handler thunk"
     for a in F:
         cls.setdefault(a, "game")
-        why.setdefault(a, "")
+        why.setdefault(a, "pointer-referenced (found by the recompiler)" if F[a].get("lifted_only") else "")
     for a, (c, l, note) in OVERRIDES.items():
         cls[a], label[a], why[a] = c, l, "reviewed" + (": " + note if note else "")
     return cls, label, why

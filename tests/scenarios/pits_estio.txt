@@ -1,0 +1,5 @@
+# AI pit stops: five drivers on the track at (116,288) of the list with the fixture options, fuel consumption
+# raised and damage on (as race_fuel_damage), raced for two minutes so the AI drivers run low and pit.
+fixture: options.set
+patch: options.set a 200a
+script: 14000:click:430:96,14100:click:430:96,14200:click:430:96,14300:click:430:96,14400:click:430:96,14500:click:116:288,14700:click:560:464,21000:key:32,23000:down:273,60000:up:273,90000:snap:1,140000:snap:2,141000:quit:0

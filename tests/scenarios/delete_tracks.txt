@@ -1,0 +1,4 @@
+# Delete tracks: with nothing selected (message, snap 1; Enter); one track selected, question (snap 2),
+# Escape = no; a second track added with shift-click, question for two (snap 3), Enter = yes: both files
+# are deleted and the list refilled (snap 4).
+script: 14000:click:256:424,14500:snap:1,15000:key:13,15500:click:112:288,16000:click:256:424,16500:snap:2,17000:key:27,17500:down:304,17600:click:112:304,17800:up:304,18200:click:256:424,18700:snap:3,19200:key:13,20000:snap:4,20500:quit:0

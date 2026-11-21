@@ -1,0 +1,4 @@
+# Start with a saved options.set (tests/fixtures: written by the game, race length changed to 7 laps): the
+# options are read (snap 1 shows 7 laps), Exit + Yes writes them back.
+fixture: options.set
+script: 14000:snap:1,14500:click:80:464,15000:click:240:280,30000:quit:0

@@ -1,0 +1,3 @@
+# Widget toolkit input: slider drag, arrow press dragged off, mouse wheel, arrow keys, Enter / Escape,
+# text field editing in the Load dialog, list clicks and wheel on the main menu.
+script: 14000:click:240:464,14500:mdown:360:64,14600:move:420:64,14700:move:470:66,14800:mup:470:66,15000:click:518:88,15200:wheel:4,15300:wheel:5,15400:wheel:5,15600:mdown:328:112,15700:move:200:112,15800:mup:200:112,16000:key:274,16100:key:273,16300:key:13,17000:click:400:464,17300:click:375:336,17400:key:104,17500:key:105,17600:key:8,17700:key:13,17800:key:120,17900:key:27,18500:click:240:464,19000:key:27,19500:click:430:112,19700:click:116:288,19800:wheel:5,19900:wheel:4,20000:mdown:544:350,20100:mup:544:350,20300:rclick:116:288,21000:quit:0

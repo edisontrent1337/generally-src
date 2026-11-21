@@ -7,7 +7,8 @@
 // Shadow execution forks: the child runs the original, the parent the rewrite; both hash every page of guest
 // memory (image, runtime data, stacks above the call frame, heap) and the result registers, and the parent
 // reports any difference down to the byte. A child about to touch the outside world (files, window, audio)
-// bails out instead (chk_extern), and that function is then only checked by whole-run traces.
+// bails out instead (chk_extern): that call is only covered by the whole-run traces; later calls are still
+// checked (until 200 calls of the function have bailed).
 #pragma once
 #include "cpu.h"
 
@@ -15,7 +16,8 @@
 extern "C" {
 #endif
 
-enum { RET_NONE, RET_EAX, RET_EDXEAX, RET_ST0, RET_XMM0 };
+// RET_AL: a C++ bool; MSVC sets only AL and leaves the rest of EAX as it happens to be, callers test AL
+enum { RET_NONE, RET_EAX, RET_EDXEAX, RET_ST0, RET_XMM0, RET_AL };
 
 typedef struct Hook {
     uint32_t addr;

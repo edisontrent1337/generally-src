@@ -1,0 +1,5 @@
+# gr.ini with a float value (Replay Length 6.5) and a string value with trailing spaces (ViewAngle
+# "defa   "), 17 more keys in [Replay] and 13 sections in place of two comment lines (both arrays grow
+# past 10), read at boot; a short race uses the replay length.
+patch: gr.ini cd 362e35, gr.ini 2dd 6465666120202020, gr.ini a 613d310d623d310d633d310d643d310d653d310d663d310d673d310d683d310d693d310d6a3d310d6b3d310d6c3d310d6d3d310d6e3d310d6f3d310d703d310d713d310d3b3b, gr.ini 52 5b615d0d5b625d0d5b635d0d5b645d0d5b655d0d5b665d0d5b675d0d5b685d0d5b695d0d5b6a5d0d5b6b5d0d5b6c5d0d5b6d5d0d3b
+script: 14000:click:430:96,14500:click:116:288,14700:click:560:464,21000:key:32,30000:quit:0

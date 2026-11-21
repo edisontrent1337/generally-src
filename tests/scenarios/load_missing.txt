@@ -1,0 +1,3 @@
+# Load from the main menu, OK with a name that is not in the list: the "not found" message (snap 1);
+# Enter closes it (snap 2), Escape cancels the dialog (snap 3).
+script: 14000:click:384:464,14500:key:120,15000:click:480:384,15500:snap:1,16000:key:13,16500:snap:2,17000:key:27,17500:snap:3,18000:quit:0

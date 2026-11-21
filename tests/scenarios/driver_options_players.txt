@@ -1,0 +1,4 @@
+# Driver options with drivers in the race: add two drivers, Options (Driver options and its Create driver
+# dialog), Cancel, open the driver dropdown (the race's drivers first, then the driver list; snap 1),
+# pick the second entry (snap 2), Escape (snap 3).
+script: 14000:click:430:96,14300:click:430:96,14800:click:464:232,15400:click:240:312,15800:click:424:64,16200:snap:1,16500:click:424:100,16900:snap:2,17300:key:27,17700:snap:3,18000:quit:0

@@ -1,0 +1,4 @@
+# Create driver dialog: OK without a name (message, OK; the dialog reopens), "blue" (exists: message
+# snap 1, OK), type computer, name "x", OK (a computer driver with skill 100 is added and shown; snap 2),
+# Create driver from the Driver options screen (snap 3), Cancel (snap 4).
+script: 14000:click:464:232,14900:click:400:312,15500:click:320:280,16000:key:98,16100:key:108,16200:key:117,16300:key:101,16600:click:400:312,17000:snap:1,17200:click:320:280,17600:click:368:256,17800:click:368:224,18000:key:120,18300:click:400:312,18800:snap:2,19200:click:160:428,19400:snap:3,19600:click:240:312,20000:snap:4,20500:quit:0

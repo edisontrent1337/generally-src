@@ -1,0 +1,4 @@
+# Right-click on the main menu: a driver in the list (Driver statistics; snap 1, OK); add Blue as a player
+# and right-click the first name row (its statistics; snap 2, OK); right-click the second name row (no
+# player: nothing; snap 3).
+script: 14000:rclick:430:96,14500:snap:1,14700:click:400:384,15000:click:430:96,15500:rclick:300:100,16000:snap:2,16200:click:400:384,16600:rclick:300:124,17000:snap:3,17500:quit:0

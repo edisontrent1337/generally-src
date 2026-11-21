@@ -1,5 +1,6 @@
 // Comparison harness (see check.h).
 #include "check.h"
+#include <signal.h>
 #include "rt.h"
 #include "plat.h"
 #include "image.h"
@@ -75,10 +76,20 @@ static int in_list(const char *list, const Hook *h) {
 
 static FILE *trace_f;
 static int trace_heap_every = 30;
+// GRX_WIPE=n: after every call through a hook (rewrite or original alike) zero n bytes of guest stack below
+// the entry ESP. That memory is dead once the function returned, but original code sometimes reads
+// uninitialized locals, which then see whatever earlier calls left there; a rewritten function leaves
+// different leftovers than the original. Wiping in both runs makes those reads identical.
+static uint32_t wipe_bytes;
 
 void chk_init(void) {
     const char *o = getenv("GRX_ORIG"), *s = getenv("GRX_SHADOW"), *n = getenv("GRX_SHADOW_N");
     if (n) shadow_max = atoi(n);
+    const char *w = getenv("GRX_WIPE");
+    if (w) wipe_bytes = (uint32_t)strtoul(w, NULL, 0) & ~3u;
+#ifndef _WIN32
+    signal(SIGPIPE, SIG_IGN);  // a shadow child that bailed out has closed its end of the pipe
+#endif
     int nh = 0, no = 0, ns = 0;
     for (Hook *h = hooks; h; h = h->next) {
         nh++;
@@ -101,8 +112,15 @@ void chk_exit(int code) {
     int bad = 0;
     for (Hook *h = hooks; h; h = h->next) {
         if (h->checks || h->mismatches || h->unshadowable)
-            rt_log("shadow %08x %-40s calls %u checked %u mismatches %u%s", h->addr, h->name, h->calls, h->checks,
-                   h->mismatches, h->unshadowable ? " (not checkable: touches files/window)" : "");
+        {
+            if (h->unshadowable)
+                rt_log("shadow %08x %-40s calls %u checked %u mismatches %u (%u%s not checkable: touch files/window)",
+                       h->addr, h->name, h->calls, h->checks, h->mismatches, h->unshadowable,
+                       h->unshadowable >= 200 ? "+" : "");
+            else
+                rt_log("shadow %08x %-40s calls %u checked %u mismatches %u", h->addr, h->name, h->calls, h->checks,
+                       h->mismatches);
+        }
         bad += h->mismatches != 0;
     }
     if (trace_f) { fprintf(trace_f, "END frames=%u shadow_bad=%d\n", chk_frame, bad); fclose(trace_f); trace_f = NULL; }
@@ -260,9 +278,9 @@ static void shadow_run(Hook *h, CPU *c) {
     } else if (hdr[0] == 0x4c494142u) {
         char name[64];
         rd_all(fd, name, sizeof name);
-        rt_log("shadow %08x %s: not checkable, the original calls %s", h->addr, h->name, name);
-        h->unshadowable = 1;
-        h->shadow = 0;
+        if (!h->unshadowable) rt_log("shadow %08x %s: not checkable, the original calls %s", h->addr, h->name, name);
+        if (h->unshadowable < 255) h->unshadowable++;
+        if (h->unshadowable >= 200) h->shadow = 0;   // (forking is not free: give up on functions that always bail)
     } else {
         Regs theirs;
         rd_all(fd, &theirs, sizeof theirs);
@@ -283,6 +301,7 @@ static void shadow_run(Hook *h, CPU *c) {
                 theirs.esi, mine.esi, theirs.edi, mine.edi, theirs.ebp, mine.ebp);
         }
         if ((h->ret == RET_EAX || h->ret == RET_EDXEAX) && mine.eax != theirs.eax) { bad = 1; WHY(" eax %08x/%08x", theirs.eax, mine.eax); }
+        if (h->ret == RET_AL && (mine.eax & 0xff) != (theirs.eax & 0xff)) { bad = 1; WHY(" al %02x/%02x", theirs.eax & 0xff, mine.eax & 0xff); }
         if (h->ret == RET_EDXEAX && mine.edx != theirs.edx) { bad = 1; WHY(" edx %08x/%08x", theirs.edx, mine.edx); }
         if (h->ret == RET_ST0 && memcmp(&mine.st0, &theirs.st0, 8)) { bad = 1; WHY(" st0 %.9g/%.9g", theirs.st0, mine.st0); }
         if (h->ret == RET_XMM0 && mine.xmm0 != theirs.xmm0) { bad = 1; WHY(" xmm0 %016llx/%016llx", (unsigned long long)theirs.xmm0, (unsigned long long)mine.xmm0); }
@@ -332,12 +351,27 @@ void chk_extern(const char *what) { (void)what; }
 static void shadow_run(Hook *h, CPU *c) { run_repl(h, c); }
 #endif
 
+static void wipe_below(CPU *c, uint32_t entry_esp) {
+    uint32_t lo = entry_esp - wipe_bytes;
+    if (lo < c->stack_lo || lo > entry_esp) lo = c->stack_lo;
+    memset((void *)(uintptr_t)(ARENA_BASE + lo), 0, entry_esp - lo);
+}
+
 void chk_dispatch(Hook *h, CPU *c) {
     h->calls++;
-    if (h->use_orig) { h->orig(c); return; }
+    uint32_t entry_esp = ESP;
+    if (h->use_orig) {
+        h->orig(c);
+        if (wipe_bytes) wipe_below(c, entry_esp);
+        return;
+    }
     CPU *saved = chk_cpu;
     chk_cpu = c;
-    if (h->shadow && !chk_in_shadow_child && h->checks < (uint32_t)shadow_max) shadow_run(h, c);
+    if (h->shadow && !chk_in_shadow_child &&
+        (h->checks < (uint32_t)shadow_max ||   // the first calls, then a sample of later ones
+         (h->calls % 97 == 0 && h->checks < 4u * (uint32_t)shadow_max)))
+        shadow_run(h, c);
     else run_repl(h, c);
     chk_cpu = saved;
+    if (wipe_bytes) wipe_below(c, entry_esp);
 }

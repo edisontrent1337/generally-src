@@ -1,0 +1,5 @@
+# Replay viewer keys: two AI drivers, 2 laps; Escape, down, Enter opens the replay. Keypad + (2:1),
+# keypad - (1:1), keypad - twice (1:3), keypad + (1:2) (snap 1); Left, Down, Right; Home, End; Page Up
+# held, then Page Down held (snap 2 while held); C marks the range start, C again its end: the race is
+# restored, the pause menu opened and the Save dialog shown (snap 3); Escape closes it (snap 4).
+script: 14000:click:430:96,14100:click:430:96,14300:click:328:64,14400:click:328:64,14500:click:328:64,14800:click:116:288,15000:click:560:464,21000:down:32,21200:up:32,30000:down:27,30100:up:27,30500:down:274,30600:up:274,31000:down:13,31100:up:13,32000:down:270,32100:up:270,32300:down:269,32400:up:269,32600:down:269,32700:up:269,32900:down:269,33000:up:269,33200:down:270,33300:up:270,33600:snap:1,34000:down:276,34100:up:276,34500:down:274,34600:up:274,35000:down:275,35100:up:275,35500:down:278,35600:up:278,36000:down:279,36100:up:279,36500:down:280,37200:up:280,37600:down:281,38000:snap:2,38300:up:281,39000:down:99,39100:up:99,40000:down:99,40100:up:99,41000:snap:3,41500:down:27,41600:up:27,42500:snap:4,43000:quit:0

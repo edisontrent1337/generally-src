@@ -1,0 +1,6 @@
+# Track folder selection with a track lying directly in tracks/ (the default folder, "misc. tracks"):
+# plain click on it (only Loose shown), select Loose (season path without a folder; snap 1), right-click it (Track info of "\\Loose", OK); Shift+click
+# two rows further (a range of folders; snap 2); Delete with several folders marked (message; snap 3, OK);
+# Ctrl+click the last folder (toggled; tracks of several folders sorted together; snap 4).
+copy: tracks/[Default Tracks]/Estio.trk -> tracks/Loose.trk
+script: 14000:click:176:267,14500:click:176:304,14800:click:116:288,15000:snap:1,15100:rclick:116:288,15400:click:400:416,15500:click:176:267,16000:down:304,16100:click:176:336,16300:up:304,16800:snap:2,17000:click:384:267,17300:snap:3,17500:click:320:280,18000:click:176:267,18500:down:306,18600:click:176:352,18800:up:306,19300:snap:4,19500:quit:0

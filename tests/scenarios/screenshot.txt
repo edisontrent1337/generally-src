@@ -1,0 +1,3 @@
+# Screenshots: F12 twice on the main menu (screens\shot0000.bmp, shot0001.bmp at screen size), F11 (shot0002.bmp at the
+# configured size); the files are compared.
+script: 14000:key:293,14500:key:293,15000:key:292,15500:quit:0

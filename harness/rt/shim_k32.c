@@ -144,7 +144,9 @@ SHIM(k_GetTickCount) { ret_std(c, (uint32_t)(plat_ticks_us() / 1000), 0); }
 SHIM(k_Sleep) { plat_sleep_ms(ARG(0)); ret_std(c, 0, 1); }
 
 static uint32_t cmdline;
-SHIM(k_GetCommandLineA) { if (!cmdline) cmdline = gstrdup("GR12.exe"); ret_std(c, cmdline, 0); }
+// The program path with a folder, as when started from its own folder: the game takes everything up to the
+// last backslash as its folder (and scans backwards past the start of the string if there is none).
+SHIM(k_GetCommandLineA) { if (!cmdline) cmdline = gstrdup(".\\GR12.exe"); ret_std(c, cmdline, 0); }
 
 static uint64_t filetime_now(void) {
     // 100 ns intervals since 1601-01-01

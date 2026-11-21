@@ -1,0 +1,3 @@
+# Five drivers (Blue, Green, Orange, Player, Red) on the track at (448,288) of the list, 5 laps: the AI drives
+# the others while the human Player reverses (down arrow), then drives forward with a few steering bursts.
+script: 14000:click:430:96,14100:click:430:96,14200:click:430:96,14300:click:430:96,14400:click:430:96,14500:click:448:288,14700:click:560:464,21000:key:32,23000:down:274,27000:up:274,27500:down:273,33000:down:276,34000:up:276,38000:down:275,38800:up:275,45000:down:276,45500:up:276,52000:up:273,53000:snap:1,61000:quit:0
