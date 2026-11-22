@@ -123,3 +123,4 @@ REWRITE(48df20, "replay_record", 0, 0, RET_NONE) { replay_record(); }
 REWRITE(40ef10, "wheel_spray", 0, 0, RET_NONE) { wheel_spray(ECX & 0xff, EDX & 0xff, XMM_F(2, 0), XMM_F(3, 0)); }
 REWRITE(407cd0, "car_step", 0, 0, RET_NONE) { car_step(static_cast<int>(ECX)); }
 REWRITE(40b890, "ai_drive", 1, 0, RET_NONE) { ai_drive(static_cast<int>(ECX), edx<int32_t>(c), argp<float>(c, 0), XMM_F(3, 0)); }
+REWRITE(41c760, "pit_crews_step", 0, 0, RET_NONE) { pit_crews_step(); }

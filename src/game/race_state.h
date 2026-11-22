@@ -1,6 +1,8 @@
 // Global race state.
 #pragma once
 #include "game/gui.h"
+#include "game/race_options.h"
+#include "game/vec3.h"
 
 enum GameState : uint8_t {
     GS_INFO = 0,       // the info box before the start
@@ -11,14 +13,31 @@ enum GameState : uint8_t {
 };
 GLOBAL(uint8_t, g_game_state, 0x4a47e3);
 
+// A pit box and its crew of eight: 0, 1 jack the car up at the front and back, 2..5 change the tyres, 6 refuels,
+// 7 repairs. A crew member's timer is 0 while walking up, 1.. while working, 0xff when done.
 struct PitBox {
-    uint8_t state;  // 0..5 car being serviced, 6 free, 7 reset, > 7 countdown
-    uint8_t rest[0x187];
+    uint8_t state;           // 0..5 car being serviced, 6 free, 7 reset, > 7 countdown after a car left
+    uint8_t crew_timer[8];   // +0x01
+    uint8_t pad09[3];
+    float facing_x[8];       // +0x0c: the direction each crew member faces (x / z)
+    float facing_z[8];       // +0x2c
+    Vec3 crew_pos[8];        // +0x4c
+    Vec3 crew_vel[8];        // +0xac, per second
+    Vec3 crew_target[8];     // +0x10c: where each crew member walks to
+    Vec3 centre;             // +0x16c
+    Vec3 heading;            // +0x178: (cos a, 0, -sin a)
+    uint8_t car;             // +0x184: the car using it (shared pits)
+    uint8_t pad185[3];
 };
 static_assert(sizeof(PitBox) == 0x188);
 GLOBAL(uint8_t, g_pit_count, 0x4a475e);
 GLOBAL(ptr32<PitBox>, g_pits, 0x4a4780);
 GLOBAL(uint8_t, g_pit_shared, 0x4a4732);       // nonzero: each car uses the pit box of its own number
+// The crew's places when idle: around the box, facing outwards (crew_target, facing_x/z).
+void pit_crew_home(PitBox &b);
+// One tick of the pit crews: cars entering, stopping in and leaving the boxes, the crews' work and their
+// physics (0x41c760).
+void pit_crews_step();
 
 GLOBAL(int32_t, g_replay_frames, 0x4a51b8);  // recorded replay frames
 GLOBAL(float, g_replay_step, 0x4aafe8);      // 1 / g_replay_rate: recorded frames per race frame
@@ -27,7 +46,24 @@ GLOBAL(int32_t, g_start_light, 0x4a4040);    // start lights shown: 0..3, -1 = n
 GLOBAL(uint32_t, g_start_sound, 0x4a4dc4);   // sound handle of the start beep
 GLOBAL(uint8_t, g_race_substate, 0x4a47e2);
 GLOBAL(uint32_t, g_unknown_4a4774, 0x4a4774);  // 256 records of 0x1c bytes, cleared at race start
-GLOBAL(uint16_t, g_unknown_4a4794, 0x4a4794);
+GLOBAL(uint16_t, g_unknown_4a4794, 0x4a4794);  // next slot of the particle list
+GLOBAL(Vec3, g_gravity, 0x4a4054);             // per second
+
+// An entry of the particle list (g_unknown_4a4774): smoke, spray, dust, splashes, sparks.
+struct Particle {
+    uint8_t type, life;
+    uint16_t pad;
+    Vec3 pos, vel;
+};
+static_assert(sizeof(Particle) == 0x1c);
+
+inline Particle &particle(uint16_t i) { return guest::at<Particle>(g_unknown_4a4774 + i * 0x1cu); }
+
+// Moves the particle slot on, wrapping at the list size.
+inline void next_particle() {
+    const uint16_t s = g_unknown_4a4794;
+    g_unknown_4a4794 = static_cast<uint32_t>(s) + 1 < g_race_options.w1e ? static_cast<uint16_t>(s + 1) : uint16_t(0);
+}
 GLOBAL(float, g_skid_amount, 0x4a4734);  // summed tyre skid this tick (drives the skid sound)
 GLOBAL(uint32_t, g_unknown_4a47a0, 0x4a47a0);  // the height map buffer (0x1000 bytes)
 GLOBAL(uint8_t, g_racing, 0x4a4797);  // the race runs (0 in menus and while paused)

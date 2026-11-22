@@ -116,7 +116,7 @@ void race_tick() {
     for (int i = 0; i < g_player_count; i++) car_step(i);
     for (int i = 0; i < g_player_count - 1; i++)
         for (int j = i + 1; j < g_player_count; j++) car_car_collide(i, j);
-    guest::call_regs(0x41c760, 0, 0);  // (not rewritten yet)
+    pit_crews_step();
 
     sound_set_volume(g_skid_sound, effect_volume(g_skid_amount, g_race_options.b21));
     g_skid_amount = 0.0f;

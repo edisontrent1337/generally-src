@@ -561,3 +561,14 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   0x102 (no such file ships), the refused newer version, a missing track file, the zoom aspect correction.
   The track-layout globals (checkpoints, gates, racing / pit line, pit entry / rejoin) now live in track.h,
   worn_tile in track.cpp, the viewport settings in ini.h.
+- 2026-11-22 (cont.): 0x41c760 `pit_crews_step` (pits.cpp): the pit boxes' crews. PitBox now has its
+  fields (crew timers, facings, positions, velocities, targets, centre, heading, car); the crew's idle
+  places (pit_crew_home) are shared with track_load. A car stopping in a free box (distance < 5, wheel
+  spin within ±3) claims it (HUD state box: the place digit), crew 0/1 jack it up, 2..5 change tyres once
+  their jack is up (skipped for tyres above 65000), 6 refuels, 7 repairs in steps of 0x19c8 with sparks;
+  leaving (distance >= 5 while claimed, or >= 10) starts a countdown and shows "F" when the fuel is below
+  1.8 × the fuel option × the lap length. Crew members keep to the ground (terrain_sample) and are
+  pushed by cars. A box index past the cars (states 6..100) is used as a car index, as in the original.
+  Shadow-checked through a temporary guest call (22.7k calls, 0 mismatches; the decompiler had the jack
+  torque's association wrong: inv_inertia * (offset * k)). All lines covered by the pits_* scenarios.
+  Particle / next_particle / g_gravity moved to race_state.h.

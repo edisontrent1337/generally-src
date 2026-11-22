@@ -28,25 +28,7 @@
 #include "game/sound.h"
 #include "game/track.h"
 
-GLOBAL(Vec3, g_gravity, 0x4a4054);             // per second
-
 namespace {
-// An entry of the particle list (g_unknown_4a4774): smoke, spray, dust, splashes.
-struct Particle {
-    uint8_t type, life;
-    uint16_t pad;
-    Vec3 pos, vel;
-};
-static_assert(sizeof(Particle) == 0x1c);
-
-Particle &particle(uint16_t i) { return guest::at<Particle>(g_unknown_4a4774 + i * 0x1cu); }
-
-// Moves the particle slot on, wrapping at the list size.
-void next_particle() {
-    const uint16_t s = g_unknown_4a4794;
-    g_unknown_4a4794 = static_cast<uint32_t>(s) + 1 < g_race_options.w1e ? static_cast<uint16_t>(s + 1) : uint16_t(0);
-}
-
 float random_entry(uint8_t i) { return guest::at<float>(g_random_table + i * 4u); }
 float next_random() {
     g_random_index = static_cast<uint8_t>(g_random_index + 1);

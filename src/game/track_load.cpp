@@ -151,46 +151,22 @@ void read_objects(GameFile *f, uint16_t version) {
     if (recs) free_guest(recs);
 }
 
-// A pit box (0x188 bytes) as the loader fills it:
-//   +0 state (6 = free), +1..+8 the crew's timers, +0x0c / +0x2c the 2D normals (x / z) of the 8 walls,
-//   +0x4c the 8 wall points 0.7 above the ground, +0xac 8 zero vectors, +0x10c the 8 wall points,
-//   +0x16c centre, +0x178 heading (cos a, 0, -sin a), +0x184 the car using it (shared pits)
-void pit_box_init(uint8_t *b, int k, const uint16_t *r) {
-    auto v = [b](int off) -> Vec3 & { return *reinterpret_cast<Vec3 *>(b + off); };
-    auto f = [b](int off) -> float & { return *reinterpret_cast<float *>(b + off); };
-    Vec3 &C = v(0x16c), &D = v(0x178);
-    C = Vec3(half_tiles(r[0]), 0.0f, half_tiles(r[1]));
-    C.y = terrain_height(C);
+void pit_box_init(PitBox &b, int k, const uint16_t *r) {
+    b.centre = Vec3(half_tiles(r[0]), 0.0f, half_tiles(r[1]));
+    b.centre.y = terrain_height(b.centre);
     const float a = static_cast<float>(r[2]) / 10000.0f;
     const float s = guest_sinf(a);
     const float c = guest_cosf(a);
-    b[0] = 6;
-    D = Vec3(c, 0.0f, -s);
-    const Vec3 side(D.z * 3.0f, 0.0f, -D.x * 3.0f);
-    // wall points: along the heading and across it (in units of `side`)
-    static constexpr struct { float along, across; } kWall[8] = {
-        {2.0f, 0.0f}, {-3.0f, 1.0f}, {1.5f, 1.0f}, {1.5f, -1.0f}, {-1.5f, 1.0f}, {-1.5f, -1.0f}, {0.0f, -1.0f}, {0.0f, 1.0f},
-    };
+    b.state = 6;
+    b.heading = Vec3(c, 0.0f, -s);
+    pit_crew_home(b);
     for (int j = 0; j < 8; j++) {
-        Vec3 &p = v(0x10c + 12 * j);
-        p.x = (C.x + D.x * kWall[j].along) + side.x * kWall[j].across;
-        p.y = (C.y + D.y * kWall[j].along) + side.y * kWall[j].across;
-        p.z = (C.z + D.z * kWall[j].along) + side.z * kWall[j].across;
-        float nx, nz;
-        if (j == 0) nx = -D.x, nz = -D.z;
-        else if (kWall[j].across > 0.0f) nx = -D.z, nz = D.x;
-        else nx = D.z, nz = -D.x;
-        f(0x0c + 4 * j) = nx;
-        f(0x2c + 4 * j) = nz;
+        b.crew_timer[j] = 0;
+        b.crew_pos[j] = b.crew_target[j];
+        b.crew_vel[j] = Vec3();
+        b.crew_pos[j].y = terrain_height(b.crew_pos[j]) + 0.7f;
     }
-    for (int j = 0; j < 8; j++) {
-        b[1 + j] = 0;
-        Vec3 &w = v(0x4c + 12 * j);
-        w = v(0x10c + 12 * j);
-        v(0xac + 12 * j) = Vec3();
-        w.y = terrain_height(w) + 0.7f;
-    }
-    if (g_pit_shared) b[0x184] = static_cast<uint8_t>(k * 8 - 0x40);
+    if (g_pit_shared) b.car = static_cast<uint8_t>(k * 8 - 0x40);
 }
 
 void read_pits(GameFile *f) {
@@ -204,7 +180,7 @@ void read_pits(GameFile *f) {
         for (int k = 0; k < n; k++) pit_box_construct(&guest::at<PitBox>(block + static_cast<uint32_t>(k) * sizeof(PitBox)));
     g_pits.a = block;
     for (int k = 0; k < g_pit_count; k++)
-        pit_box_init(&g_pits.get()[k].state, k, &guest::at<uint16_t>(recs + static_cast<uint32_t>(k) * 6));
+        pit_box_init(g_pits.get()[k], k, &guest::at<uint16_t>(recs + static_cast<uint32_t>(k) * 6));
     if (recs) free_guest(recs);
     if (g_pit_count > 6) g_pit_count = 6;
 }
