@@ -64,7 +64,7 @@ void track_info_description_clicked(Widget *) {
     title->init();
     title->assign(g_info_track.get(), static_cast<uint32_t>(std::strlen(g_info_track.get())));
     text->init();
-    const char *desc = &guest::at<char>(0x4a4f20);  // g_track_description
+    const char *desc = g_track_description;
     text->assign(desc, static_cast<uint32_t>(std::strlen(desc)));
     message_box(TRACK_INFO_DRAW, title.get(), text.get(), 1);
     text->destroy();

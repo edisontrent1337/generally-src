@@ -11,7 +11,8 @@
 //   pit boxes: u8 count, records (u16 x, u16 z, u16 angle)
 //   checkpoints: u8 count, records (u16 x0, z0, x1, z1); from 0x120 on: pit lane gates, alike
 //   racing line: count (u8 before 0x102, else u16), points (u16 x, z); pit line: u8 count, points
-//   trailer: lap length (u16 before 0x102, else u32), the hot-lap records, the ghost lap
+//   trailer: lap length (u16 before 0x102, else u32), the hot-lap records, the ghost lap; before it,
+//   optionally, the author (30 bytes) and description (500 bytes), marked by 0xffff just before the length
 // Positions are in half tiles, angles in 1/10000 radians. The checksum over the file (up to the trailer
 // offset) seeds the records' checksum.
 #include "game/file.h"
@@ -24,6 +25,7 @@
 #include "game/render.h"
 #include "game/selected_tracks.h"
 #include "game/track.h"
+#include "game/track_info.h"
 #include "bridge/imports.h"
 
 namespace {
@@ -99,10 +101,11 @@ void apply_tile_run(int i, int kind) {
     }
 }
 
-void read_tiles(GameFile *f, uint16_t version) {
+// The tile runs' buffer has room for one more run when loading a race (spare = 1), not for the preview.
+void read_tiles(GameFile *f, uint16_t version, int spare) {
     guest::Local<int32_t> runs;
     file_read(f, runs.get(), version < 0x103 ? 2 : 4);
-    const uint32_t buf = malloc_guest(static_cast<uint64_t>(static_cast<uint32_t>(*runs + 1)) * 2);
+    const uint32_t buf = malloc_guest(static_cast<uint64_t>(static_cast<uint32_t>(*runs + spare)) * 2);
     file_read(f, guest::host(buf), static_cast<uint32_t>(*runs) * 2);
     guest::call_cdecl(0x497d10, g_tile_map, 0x10, 0x40000);  // memset
     const uint16_t *run = &guest::at<uint16_t>(buf);
@@ -112,7 +115,8 @@ void read_tiles(GameFile *f, uint16_t version) {
     if (buf) free_guest(buf);
 }
 
-void read_objects(GameFile *f, uint16_t version) {
+// Objects; the menu preview sets only type, position and heading (and shows type '$' as '%').
+void read_objects(GameFile *f, uint16_t version, bool preview) {
     if (version < 0x102) {
         guest::Local<uint8_t> n;
         file_read(f, n.get(), 1);
@@ -143,6 +147,10 @@ void read_objects(GameFile *f, uint16_t version) {
         const float s = guest_sinf(a);
         const float c = guest_cosf(a);
         o.heading = Vec3(c, 0.0f, -s);
+        if (preview) {
+            if (o.type == '$') o.type = '%';
+            continue;
+        }
         o.vel = Vec3();
         *reinterpret_cast<uint16_t *>(o.unknown1c) = 0;
         o.mass = 0.001f;
@@ -185,6 +193,17 @@ void read_pits(GameFile *f) {
     if (g_pit_count > 6) g_pit_count = 6;
 }
 
+// A line (x0, z0, x1, z1 in half tiles) as start, unit direction, length.
+void segment_from(Segment &s, const uint16_t *r) {
+    s.x = half_tiles(r[0]);
+    s.z = half_tiles(r[1]);
+    s.dx = half_tiles(r[2] - r[0]);
+    s.dz = half_tiles(r[3] - r[1]);
+    s.length = guest_sqrtf(s.dz * s.dz + s.dx * s.dx);
+    s.dx = s.dx / s.length;
+    s.dz = s.dz / s.length;
+}
+
 // Checkpoints and gates: u8 count, then lines (start, end) stored as start, unit direction, length.
 void read_segments(GameFile *f, uint8_t &count, uint32_t &segments) {
     file_read(f, &count, 1);
@@ -194,22 +213,14 @@ void read_segments(GameFile *f, uint8_t &count, uint32_t &segments) {
     segments = malloc_guest(static_cast<uint64_t>(count) * sizeof(Segment));
     for (int k = 0; k < count; k++) {
         const uint16_t *r = &guest::at<uint16_t>(recs + static_cast<uint32_t>(k) * 8);
-        Segment &s = guest::at<Segment>(segments + static_cast<uint32_t>(k) * sizeof(Segment));
-        s.x = half_tiles(r[0]);
-        s.z = half_tiles(r[1]);
-        s.dx = half_tiles(r[2] - r[0]);
-        s.dz = half_tiles(r[3] - r[1]);
-        s.length = guest_sqrtf(s.dz * s.dz + s.dx * s.dx);
-        s.dx = s.dx / s.length;
-        s.dz = s.dz / s.length;
+        segment_from(guest::at<Segment>(segments + static_cast<uint32_t>(k) * sizeof(Segment)), r);
     }
     if (recs) free_guest(recs);
 }
 
 // The finish line (the last checkpoint) as tile type 0x1c on the plain tiles (< 8) it crosses: seven
 // lines 0.5 tiles apart, centred on it.
-void paint_finish_line() {
-    const Segment &s = guest::at<Segment>(g_checkpoints + static_cast<uint32_t>(g_checkpoint_count - 1) * sizeof(Segment));
+void paint_finish_line(const Segment &s) {
     float off = -1.5f;
     do {
         const float length = s.length / g_tile_size;
@@ -278,7 +289,7 @@ void find_pit_ends() {
     }
 }
 
-void read_trailer(GameFile *f, uint16_t version, uint32_t trailer) {
+void read_trailer(GameFile *f, uint16_t version, uint32_t trailer, bool ghost) {
     const uint32_t length_size = version < 0x102 ? 2 : 4;
     file_seek(f, static_cast<int>(trailer - length_size), 0);
     g_track_length = 0;
@@ -287,7 +298,7 @@ void read_trailer(GameFile *f, uint16_t version, uint32_t trailer) {
     file_read(f, g_record_name, 0x5b);
     car_models_read(f, g_record_car[0], kRecords);
     record_dates_read(f);
-    if (g_player_count == 1) ghost_load(f);
+    if (ghost && g_player_count == 1) ghost_load(f);
 }
 
 void checksum(GameFile *f, uint32_t size) {
@@ -320,8 +331,9 @@ void camera_axes(int16_t tilt, int16_t rotation, float &cos_tilt, float &sin_til
 
 // Places the camera eye so that the track's corners (2 above the ground) fit the screen: for each pair of
 // corners the distance at which they fill the width and the height, the eye at the nearest of these, then
-// pulled in by the zoom (for zooms below 1 corrected for the screen's aspect).
-void camera_place(float cos_tilt, float sin_tilt) {
+// pulled in by the zoom (in a race, zooms below 1 are corrected for the screen's aspect; the menu
+// preview fits the height a little more loosely).
+void camera_place(float cos_tilt, float sin_tilt, bool race) {
     const uint8_t *h = g_height_map.get();
     const float size = g_track_size;
     const Vec3 &R = g_view_right, &D = g_view_down, &F = g_view_forward;
@@ -338,7 +350,7 @@ void camera_place(float cos_tilt, float sin_tilt) {
         p[k].f = F.y * hy[k] + F.x * cx[k] + F.z * cz[k];
     }
     const float aspect = g_screen_aspect;
-    const float k = (aspect * 11.0f) / 12.0f;
+    const float k = race ? (aspect * 11.0f) / 12.0f : aspect;
     float near_r = 0.0f, near_d = 0.0f, eye_r = 0.0f, eye_d = 0.0f;
     for (int i = 0; i < 3; i++) {
         for (int j = i + 1; j < 4; j++) {
@@ -374,7 +386,7 @@ void camera_place(float cos_tilt, float sin_tilt) {
     }
     float dist = near_r;
     if (near_d < dist) dist = near_d;
-    if (g_view_zoom < 1.0f) {
+    if (race && g_view_zoom < 1.0f) {
         if (0.75f < aspect)
             g_view_zoom = g_view_zoom + ((aspect * 4.0f) / 3.0f - 1.0f) * (1.0f - g_view_zoom) * sin_tilt;
         if (aspect < 0.75f)
@@ -387,8 +399,15 @@ void camera_place(float cos_tilt, float sin_tilt) {
     g_view_eye.z = (R.z * eye_r + D.z * eye_d) + F.z * dist * zoom;
 }
 
-// Reads an opened track file; false (the file closed) for a version newer than 0x124.
-bool read_track(GameFile *f) {
+struct Header {
+    uint16_t version;
+    uint32_t trailer;
+    int16_t tilt, rotation;
+    uint8_t paint_finish;
+};
+
+// The header up to the zoom; false (the file closed) for a version newer than 0x124.
+bool read_header(GameFile *f, Header &h) {
     guest::Local<uint16_t> version, magic;
     guest::Local<uint8_t> paint_finish;
     *paint_finish = 1;
@@ -403,7 +422,7 @@ bool read_track(GameFile *f) {
         *version = 0x100;
         file_seek(f, 0, 0);
     }
-    const uint16_t ver = *version;
+    h.version = *version;
     guest::Local<uint32_t> trailer;
     file_read(f, trailer.get(), 4);
     guest::Local<uint8_t> byte;
@@ -417,28 +436,46 @@ bool read_track(GameFile *f) {
     file_read(f, tilt.get(), 2);
     file_read(f, rotation.get(), 2);
     g_view_zoom = 1.05f;
-    if (ver >= 0x105) {
+    if (h.version >= 0x105) {
         file_read(f, byte.get(), 1);
         g_view_zoom = static_cast<float>(*byte) * 0.01f;
         file_read(f, paint_finish.get(), 1);
     }
-    if (g_cfg_zoom > 0) g_view_zoom = static_cast<float>(g_cfg_zoom) * 0.01f;
-    if (g_cfg_view_angle != 0x7fff) *tilt = static_cast<int16_t>(g_cfg_view_angle);
-    if (g_cfg_rotation != 0x7fff) *rotation = static_cast<int16_t>(g_cfg_rotation);
-    float cos_tilt, sin_tilt;
-    camera_axes(*tilt, *rotation, cos_tilt, sin_tilt);
+    h.trailer = *trailer;
+    h.tilt = *tilt;
+    h.rotation = *rotation;
+    h.paint_finish = *paint_finish;
+    return true;
+}
 
-    read_tiles(f, ver);
-    guest::Local<uint16_t> height_bytes;
-    file_read(f, height_bytes.get(), 2);
-    file_read(f, g_height_map.get(), *height_bytes);
-    read_objects(f, ver);
+void read_heights(GameFile *f) {
+    guest::Local<uint16_t> bytes;
+    file_read(f, bytes.get(), 2);
+    file_read(f, g_height_map.get(), *bytes);
+}
+
+// Reads an opened track file; false (the file closed) for a version newer than 0x124.
+bool read_track(GameFile *f) {
+    Header h;
+    if (!read_header(f, h)) return false;
+    const uint16_t ver = h.version;
+    if (g_cfg_zoom > 0) g_view_zoom = static_cast<float>(g_cfg_zoom) * 0.01f;
+    if (g_cfg_view_angle != 0x7fff) h.tilt = static_cast<int16_t>(g_cfg_view_angle);
+    if (g_cfg_rotation != 0x7fff) h.rotation = static_cast<int16_t>(g_cfg_rotation);
+    float cos_tilt, sin_tilt;
+    camera_axes(h.tilt, h.rotation, cos_tilt, sin_tilt);
+
+    read_tiles(f, ver, 1);
+    read_heights(f);
+    read_objects(f, ver, false);
     read_pits(f);
     read_segments(f, g_checkpoint_count, g_checkpoints);
-    if (*paint_finish) paint_finish_line();
+    if (h.paint_finish)
+        paint_finish_line(guest::at<Segment>(g_checkpoints + static_cast<uint32_t>(g_checkpoint_count - 1) * sizeof(Segment)));
     g_gate_count = 0;
     if (ver >= 0x120) read_segments(f, g_gate_count, g_gates);
     if (ver < 0x102) {
+        guest::Local<uint8_t> byte;
         file_read(f, byte.get(), 1);
         g_race_line_count = *byte;
     } else {
@@ -448,11 +485,54 @@ bool read_track(GameFile *f) {
     file_read(f, &g_pit_line_count, 1);
     read_line(f, g_pit_line_count, g_pit_line);
     find_pit_ends();
-    read_trailer(f, ver, *trailer);
-    checksum(f, *trailer);
+    read_trailer(f, ver, h.trailer, true);
+    checksum(f, h.trailer);
     file_close(f);
-    camera_place(cos_tilt, sin_tilt);
+    camera_place(cos_tilt, sin_tilt, true);
     return true;
+}
+
+// The menu preview's reading of an opened file: no gr.ini overrides, the finish line always painted,
+// pit boxes and checkpoints skipped (only the finish line is read), the author and description, no ghost.
+void read_preview(GameFile *f) {
+    Header h;
+    if (!read_header(f, h)) return;
+    const uint16_t ver = h.version;
+    float cos_tilt, sin_tilt;
+    camera_axes(h.tilt, h.rotation, cos_tilt, sin_tilt);
+    read_tiles(f, ver, 0);
+    read_heights(f);
+    read_objects(f, ver, true);
+    file_read(f, &g_pit_count, 1);
+    file_seek(f, g_pit_count * 6, 1);
+    file_read(f, &g_checkpoint_count, 1);
+    file_seek(f, g_checkpoint_count * 8 - 8, 1);
+    guest::Local<uint16_t[4]> line;
+    file_read_i16x4(f, reinterpret_cast<int16_t *>(*line), 1);
+    Segment finish;
+    segment_from(finish, *line);
+    paint_finish_line(finish);
+    if (ver >= 0x120) {
+        file_read(f, &g_gate_count, 1);
+        file_seek(f, g_gate_count * 8 - 8, 1);
+        guest::Local<uint16_t[4]> gate;
+        file_read_i16x4(f, reinterpret_cast<int16_t *>(*gate), 1);
+    }
+    g_track_author[0] = 0;
+    g_track_description[0] = 0;
+    file_seek(f, static_cast<int>(h.trailer - (ver < 0x102 ? 4 : 6)), 0);
+    guest::Local<uint16_t> marker;
+    file_read(f, marker.get(), 2);
+    if (*marker == 0xffff) {
+        file_seek(f, static_cast<int>(h.trailer - (ver < 0x102 ? 0x216 : 0x218)), 0);
+        file_read(f, g_track_author, 0x1e);
+        g_track_author[0x1e] = 0;
+        file_read(f, g_track_description, 0x1f4);
+        g_track_description[0x1f4] = 0;
+    }
+    read_trailer(f, ver, h.trailer, false);
+    file_close(f);
+    camera_place(cos_tilt, sin_tilt, false);
 }
 
 }  // namespace
@@ -476,4 +556,22 @@ int track_load() {
     const int result = opened && read_track(f) ? 0 : -1;
     file_destruct(f);
     return result;
+}
+
+void track_preview_load(const MsString *name) {
+    enter_game_dir();
+    guest::Local<MsString> dir, t1, t2, path;
+    dir->init();
+    dir->assign(&guest::at<char>(0x49ccf4), 6);  // "tracks"
+    MsString::concat_move(t1.get(), dir.get(), 0x49ccfcu);  // + "\\"
+    MsString::concat_move(t2.get(), t1.get(), name);
+    MsString::concat_move(path.get(), t2.get(), 0x49cd00u);  // + ".trk"
+    t2->destroy();
+    t1->destroy();
+    dir->destroy();
+    guest::Local<GameFile> file;
+    GameFile *f = file_construct(file.get());
+    if (file_open(f, path.get(), FM_IN | FM_BINARY)) read_preview(f);
+    file_destruct(f);
+    path->destroy();
 }

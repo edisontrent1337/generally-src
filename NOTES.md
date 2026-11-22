@@ -596,3 +596,10 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   vertex normals from summed cross products, five collision points, wheels) and writes cars\general.car.
   New scenarios cars_missing (the written general.car is compared) and cars_extra (a second model file
   and an invalid one). Uncovered: freeing an existing g_cars when nothing loads again.
+- 2026-11-22 (cont.): 0x490120 `track_preview_load` (track_load.cpp, ECX = "\name"): the main menu's
+  preview loader, a trimmed track_load sharing its helpers: no gr.ini overrides, the finish line always
+  painted (from the last checkpoint, the others and the pit boxes skipped), objects get only type,
+  position and heading ('$' shows as '%'), the author / description before the trailer (marker 0xffff),
+  no ghost, and the camera fits the height with the plain aspect and no zoom correction. Its tile-run
+  buffer has no spare run (track_load's has one): a 2-byte difference in a freed heap block was the only
+  trace difference until that was matched (found by dumping the heap with GRX_DUMP on SIGALRM).
