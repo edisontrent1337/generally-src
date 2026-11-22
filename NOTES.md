@@ -616,4 +616,5 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
 - 2026-11-22 (cont.): 0x414120 `race_view_draw_unsorted` (car_render.cpp, TyreAutoSort = 0): as the
   sorted view, but each car's wheels are only split by the car's sorted depth (farther ones drawn before
   its triangles, which come in model order, the rest after), and the '$' objects are not drawn at all.
-  New scenario race_unsorted (gr.ini patched, pit stops); shadow-checked, 0 mismatches.
+  New scenario race_unsorted (gr.ini patched, pit stops); shadow-checked, 0 mismatches. Uncovered there: a
+  wheel carried by the tyre crew (same code shape as the covered sorted path).
