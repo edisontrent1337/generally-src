@@ -494,9 +494,9 @@ bool read_track(GameFile *f) {
 
 // The menu preview's reading of an opened file: no gr.ini overrides, the finish line always painted,
 // pit boxes and checkpoints skipped (only the finish line is read), the author and description, no ghost.
-void read_preview(GameFile *f) {
+bool read_preview(GameFile *f) {
     Header h;
-    if (!read_header(f, h)) return;
+    if (!read_header(f, h)) return false;
     const uint16_t ver = h.version;
     float cos_tilt, sin_tilt;
     camera_axes(h.tilt, h.rotation, cos_tilt, sin_tilt);
@@ -533,6 +533,7 @@ void read_preview(GameFile *f) {
     read_trailer(f, ver, h.trailer, false);
     file_close(f);
     camera_place(cos_tilt, sin_tilt, false);
+    return true;
 }
 
 }  // namespace
@@ -558,7 +559,7 @@ int track_load() {
     return result;
 }
 
-void track_preview_load(const MsString *name) {
+int track_preview_load(const MsString *name) {
     enter_game_dir();
     guest::Local<MsString> dir, t1, t2, path;
     dir->init();
@@ -571,7 +572,8 @@ void track_preview_load(const MsString *name) {
     dir->destroy();
     guest::Local<GameFile> file;
     GameFile *f = file_construct(file.get());
-    if (file_open(f, path.get(), FM_IN | FM_BINARY)) read_preview(f);
+    const int result = file_open(f, path.get(), FM_IN | FM_BINARY) && read_preview(f) ? 0 : -1;
     file_destruct(f);
     path->destroy();
+    return result;
 }

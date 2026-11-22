@@ -33,6 +33,7 @@ uint8_t worn_tile(uint8_t t);
 // Loads tracks\<selected track>.trk; 0 on success, -1 if it is missing or of a newer version.
 int track_load();
 // Loads a track for the main menu's preview: the terrain, objects, finish line, camera, author and
-// description and the records (0x490120). name is "\name" or "\folder\name".
+// description and the records (0x490120); 0, or -1 if the file is missing or of a newer version. name is
+// "\name" or "\folder\name".
 struct MsString;
-void track_preview_load(const MsString *name);
+int track_preview_load(const MsString *name);
