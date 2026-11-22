@@ -16,7 +16,9 @@ CXX      := clang++
 SDLCF    := $(shell sdl2-config --cflags)
 SDLLD    := $(shell sdl2-config --libs) -lobjc
 # -ffp-contract=off: no fused multiply-add, float results must match the x86 SSE code bit for bit
-COMMON   := -O2 -g -fno-strict-aliasing -ffp-contract=off -fwrapv -Iharness/rt
+# -fno-vectorize: Apple clang 21 miscompiles the checksum loop in track_load (0x43f730, arr[i & 3] += ...):
+# the vectorised loop stores 64 bytes instead of 16 and overwrites the globals after the array (gravity)
+COMMON   := -O2 -g -fno-strict-aliasing -ffp-contract=off -fwrapv -fno-vectorize -Iharness/rt
 CFLAGS   := -std=c11 $(COMMON)
 CXXFLAGS := -std=c++20 $(COMMON) -Isrc -fno-exceptions -fno-rtti -Wall -Wextra -Wno-unused-parameter
 LDFLAGS  := -Wl,-stack_size,0x10000000
