@@ -97,6 +97,8 @@ struct Renderer {
     void car_shadow(int p);
     void crew_shadows();
     void car(int p);
+    void car_unsorted(int p, float car_depth);
+    void car_vertices(int p, const uint8_t *m);
     void car_triangle(int p, const uint8_t *m, int t);
     void crew_member(int entry);
     void flag_objects();
@@ -262,6 +264,33 @@ void Renderer::car_triangle(int p, const uint8_t *m, int t) {
                     P[b].x, P[b].y, P[b].z, P[c].x, P[c].y, P[c].z, shade[a], shade[b], shade[c]);
 }
 
+// Car p's vertices, projected, and their shading (3.99 under water, else from the angle between the
+// vertex normal and the view ray).
+void Renderer::car_vertices(int p, const uint8_t *m) {
+    const CarRef c(p);
+    const Vec3 &R = c.right(), &U = c.up(), &F = c.fwd();
+    const float px = c.pos().x - g_view_eye.x, py = c.pos().y - g_view_eye.y, pz = c.pos().z - g_view_eye.z;
+    for (int i = 0; i < m[0xbc]; i++) {
+        const Vec3 &v = model_v(m, 0x180 + 12 * i);
+        const float z = ((R.z * v.x + pz) + U.z * v.y) + F.z * v.z;
+        const float x = ((v.x * R.x + px) + U.x * v.y) + F.x * v.z;
+        const float y = ((R.y * v.x + py) + U.y * v.y) + F.y * v.z;
+        if (!view.project(x, y, z, P[i])) continue;
+        if (g_water_level <= y + g_view_eye.y) {
+            const Vec3 &n = model_v(m, 0x2e8 + 12 * i);
+            const float ry = y - P[i].z;
+            last_x = n.x * R.x + n.y * U.x + F.x * n.z;
+            last_y = R.y * n.x + U.y * n.y + F.y * n.z;
+            const float wz = R.z * n.x + U.z * n.y + F.z * n.z;
+            const float len = guest_sqrtf(ry * ry + x * x + z * z);
+            const float s = (last_y * ry + last_x * x + wz * z) / (len + 0.001f);
+            shade[i] = 0.0f <= s ? 0.0f : s * s * 2.99f;
+        } else {
+            shade[i] = 3.99f;
+        }
+    }
+}
+
 // Car p: wheels (lifted by the jacks, carried by the tyre crew), vertices with their shading, then the
 // triangles and wheels far to near.
 void Renderer::car(int p) {
@@ -311,25 +340,7 @@ void Renderer::car(int p) {
         under[4] = (g_water_level <= y + g_view_eye.y) + 1;
     }
     const int fifth_under = under[4];
-    for (int i = 0; i < m[0xbc]; i++) {
-        const Vec3 &v = model_v(m, 0x180 + 12 * i);
-        const float z = ((R.z * v.x + pz) + U.z * v.y) + F.z * v.z;
-        const float x = ((v.x * R.x + px) + U.x * v.y) + F.x * v.z;
-        const float y = ((R.y * v.x + py) + U.y * v.y) + F.y * v.z;
-        if (!view.project(x, y, z, P[i])) continue;
-        if (g_water_level <= y + g_view_eye.y) {
-            const Vec3 &n = model_v(m, 0x2e8 + 12 * i);
-            const float ry = y - P[i].z;
-            last_x = n.x * R.x + n.y * U.x + F.x * n.z;
-            last_y = R.y * n.x + U.y * n.y + F.y * n.z;
-            const float wz = R.z * n.x + U.z * n.y + F.z * n.z;
-            const float len = guest_sqrtf(ry * ry + x * x + z * z);
-            const float s = (last_y * ry + last_x * x + wz * z) / (len + 0.001f);
-            shade[i] = 0.0f <= s ? 0.0f : s * s * 2.99f;
-        } else {
-            shade[i] = 3.99f;
-        }
-    }
+    car_vertices(p, m);
     float tdepth[64];
     for (int t = 0; t < m[0xbe]; t += 3)
         tdepth[t / 3] = (P[m[0xc2 + t]].z + P[m[0xc1 + t]].z + P[m[0xc3 + t]].z) / 3.0f;
@@ -367,6 +378,79 @@ void Renderer::car(int p) {
     }
     for (int t = 0; t < m[0xbe]; t += 3)
         if (0.0f < tdepth[t / 3] || tdepth[t / 3] == 0.0f) car_triangle(p, m, t);
+}
+
+// Car p without depth sorting (0x414120): wheels farther than the car's centre are drawn before its
+// triangles (which come in model order), the others after them.
+void Renderer::car_unsorted(int p, float car_depth) {
+    const CarRef c(p);
+    const uint8_t *m = g_race_models[p];
+    const Vec3 &R = c.right(), &U = c.up(), &F = c.fwd();
+    const float px = c.pos().x - g_view_eye.x, py = c.pos().y - g_view_eye.y, pz = c.pos().z - g_view_eye.z;
+    const int box = box_of_car(p);
+    for (int k = 0; k < 4; k++) {
+        const Vec3 &w = model_v(m, 0x504 + 12 * k);
+        float x = ((w.x * R.x + px) + U.x * w.y) + F.x * w.z;
+        float z = ((w.x * R.z + pz) + w.y * U.z) + F.z * w.z;
+        float y = ((w.x * R.y + py) + w.y * U.y) + F.y * w.z;
+        if (box < g_pit_count) {
+            const Vec3 &C = g_pits.get()[box].crew_pos[2 + k];
+            float f;
+            switch (tyre_carry(g_pits.get()[box].crew_timer[2 + k], f)) {
+            case 1:
+                x = C.x - g_view_eye.x;
+                y = C.y - g_view_eye.y;
+                z = C.z - g_view_eye.z;
+                break;
+            case 2: {
+                const float nx = ((C.x - g_view_eye.x) - x) * f + x;
+                const float ny = ((C.y - g_view_eye.y) - y) * f + y;
+                const float nz = ((C.z - g_view_eye.z) - z) * f + z;
+                x = nx, y = ny, z = nz;
+                break;
+            }
+            default:
+                break;
+            }
+        }
+        const float radius = *model_f(m, 0x1c + 4 * k);
+        const float ground = (c.point(m[0xbd] + k).y - g_view_eye.y) + radius;
+        if (y < ground) y = ground;
+        Pt &wp = wheel_pt(k);
+        view.project(x, y, z, wp);
+        if (wp.z <= car_depth) {
+            under[k] = (g_water_level <= g_view_eye.y + y) + 1;
+        } else {
+            under[k] = 0;
+            draw_disc(g_water_level <= g_view_eye.y + y ? 0xa9 : 0xab, false, wp.x, wp.y, wp.z, radius);
+        }
+    }
+    int fifth_late = 0;
+    if (m[0xc0] == 0) {
+        const Vec3 &w = model_v(m, 0x534);
+        const float z = ((R.z * w.x + pz) + U.z * w.y) + F.z * w.z;
+        const float x = ((R.x * w.x + px) + w.y * U.x) + F.x * w.z;
+        const float y = ((R.y * w.x + py) + U.y * w.y) + F.y * w.z;
+        Pt &wp = wheel_pt(4);
+        view.project(x, y, z, wp);
+        if (wp.z <= car_depth) {
+            fifth_late = (g_water_level <= y + g_view_eye.y) + 1;
+        } else {
+            const uint8_t colour = static_cast<uint8_t>(p * 8 + (g_water_level <= y + g_view_eye.y ? -0x3b : -0x39));
+            draw_disc(colour, false, wp.x, wp.y, wp.z, 0.3f);
+        }
+    }
+    car_vertices(p, m);
+    for (int t = 0; t < m[0xbe]; t += 3) car_triangle(p, m, t);
+    for (int k = 0; k < 4; k++) {
+        const Pt &wp = wheel_pt(k);
+        if (under[k] == 1 || under[k] == 2)
+            draw_disc(under[k] == 1 ? 0xab : 0xa9, false, wp.x, wp.y, wp.z, *model_f(m, 0x1c + 4 * k));
+    }
+    if (fifth_late) {
+        const Pt &wp = wheel_pt(4);
+        draw_disc(static_cast<uint8_t>(p * 8 + (fifth_late == 1 ? -0x39 : -0x3b)), false, wp.x, wp.y, wp.z, 0.3f);
+    }
 }
 
 // A crew member: legs, body, chest and head as discs (the head in the car's colour for shared pits).
@@ -466,7 +550,8 @@ void Renderer::flag_objects() {
 }
 }  // namespace
 
-void race_view_draw_sorted() {
+namespace {
+void race_view_draw(bool sorted) {
     Renderer r;
     const int n = g_player_count + g_pit_count * 8;
     r.sort_by_depth(n);
@@ -477,8 +562,13 @@ void race_view_draw_sorted() {
     }
     for (int i = 0; i < g_player_count + g_pit_count * 8; i++) {
         const int e = r.order[i];
-        if (e < g_player_count) r.car(e);
-        else r.crew_member(e);
+        if (e >= g_player_count) r.crew_member(e);
+        else if (sorted) r.car(e);
+        else r.car_unsorted(e, r.depth[i + 1]);
     }
-    r.flag_objects();
+    if (sorted) r.flag_objects();  // the unsorted view leaves them out
 }
+}  // namespace
+
+void race_view_draw_sorted() { race_view_draw(true); }
+void race_view_draw_unsorted() { race_view_draw(false); }

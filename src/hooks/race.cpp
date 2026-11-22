@@ -130,3 +130,4 @@ REWRITE(46a040, "box_draw_pixels", 12, 0, RET_NONE) {
                     Vec3(argf(c, 6), argf(c, 7), argf(c, 8)), Vec3(argf(c, 9), argf(c, 10), argf(c, 11)));
 }
 REWRITE(40f7f0, "race_view_draw_sorted", 0, 0, RET_NONE) { race_view_draw_sorted(); }
+REWRITE(414120, "race_view_draw_unsorted", 0, 0, RET_NONE) { race_view_draw_unsorted(); }

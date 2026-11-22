@@ -39,5 +39,8 @@ void shaded_triangle(uint8_t colour, bool always, float x0, float y0, float z0, 
 void box_draw(const Vec3 &c, const Vec3 &a, const Vec3 &b, const Vec3 &h);
 // The cars, crews and ghost in the race view, far to near (0x40f7f0).
 void race_view_draw_sorted();
+// The same, each car's wheels only split into those behind and in front of its centre, and without the
+// '$' objects (0x414120).
+void race_view_draw_unsorted();
 void box_draw_pixels(uint8_t colour, const Vec3 &c, const Vec3 &a, const Vec3 &b, const Vec3 &h);
 void wheel_spray(int p, int w, float size, float strength);

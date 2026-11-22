@@ -613,3 +613,7 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   and the "last screen position" for discs behind the camera (also written with normals). Disc radii are
   in xmm1 (wheel radius from model +0x1c, 0.3 fifth point, crew 0.5 / 0.5 / 0.4 / 0.3). Shadow-checked
   over the suite (1.7k calls, 0 mismatches) after fixing the shadow centre's sum order (W0+W1+W2+W3).
+- 2026-11-22 (cont.): 0x414120 `race_view_draw_unsorted` (car_render.cpp, TyreAutoSort = 0): as the
+  sorted view, but each car's wheels are only split by the car's sorted depth (farther ones drawn before
+  its triangles, which come in model order, the rest after), and the '$' objects are not drawn at all.
+  New scenario race_unsorted (gr.ini patched, pit stops); shadow-checked, 0 mismatches.
