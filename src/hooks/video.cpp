@@ -35,3 +35,4 @@ REWRITE(401bf0, "surface_has_alpha", 0, 0, RET_AL) { ret_bool(c, surface_has_alp
 REWRITE(401d10, "surface_fit", 1, 0, RET_EAX) { ret(c, surface_fit(ECX, static_cast<int>(EDX), static_cast<int>(arg(c, 0)))); }
 REWRITE(471e50, "screenshot_take", 0, 0, RET_NONE) { screenshot_take(ECX, EDX); }
 REWRITE(46b580, "palette_reset", 0, 0, RET_NONE) { palette_reset(); }
+REWRITE(401250, "scale_surface", 0, 0, RET_NONE) { scale_surface(ECX, EDX); }

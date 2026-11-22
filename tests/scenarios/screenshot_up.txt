@@ -1,0 +1,3 @@
+# F11 screenshot scaled to 1024 x 768 (enlarged: three-lobe Lanczos filter): gr.ini's ScreenshotWidth / Height patched; the file is compared.
+patch: gr.ini 3dd 31303234, gr.ini 3f5 37363820
+script: 14000:key:292,14500:quit:0

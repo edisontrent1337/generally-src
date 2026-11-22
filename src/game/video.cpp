@@ -3,6 +3,7 @@
 
 #include "game/file.h"
 #include "game/race_options.h"
+#include "game/fmath.h"
 
 #include <cstring>
 
@@ -218,6 +219,143 @@ bool surface_has_alpha(SdlSurfaceRef ref) {
     return found;
 }
 
+namespace {
+// Lanczos filtering for a scale factor (output / input size): 3 lobes, 2 when shrinking below 0.67, 1 at
+// half size and below.
+struct Lanczos {
+    double scale;    // output / input
+    double s;        // min(scale, 1): the kernel is stretched when shrinking
+    int lobes;
+    double support;  // input pixels on either side
+    uint32_t taps;   // kernel entries kept per output pixel
+    Lanczos(double scale_, int input) : scale(scale_), s(scale_ <= 1.0 ? scale_ : 1.0) {
+        lobes = 3;
+        if (s < 0.67) lobes = 2;
+        if (s <= 0.5) lobes = 1;
+        support = lobes / s;
+        taps = static_cast<uint32_t>(guest::to_int64(support * 2.0)) + 5;
+        if (taps >= static_cast<uint32_t>(input)) taps = static_cast<uint32_t>(input);
+    }
+    double weight(double x) const {
+        double t = x * s;
+        if (t == 0.0) return 1.0;
+        if (static_cast<double>(-lobes) >= t || t >= static_cast<double>(lobes)) return 0.0;
+        t = t * 3.14159265359;
+        const double outer = guest_sin(t / lobes);
+        const double inner = guest_sin(t);
+        return (outer * (inner * lobes)) / (t * t);
+    }
+};
+
+// The input range of output pixel i: first pixel and count.
+void input_range(const Lanczos &l, int i, int input, double &centre, uint32_t &first, uint32_t &count) {
+    centre = (static_cast<double>(i) + 0.5) / l.scale;
+    double lo = (centre - l.support) + 0.5;
+    if (0.0 > lo) lo = 0.0;
+    first = static_cast<uint32_t>(guest::to_int64(lo));
+    double hi = (l.support + 0.5) + centre;
+    if (hi > static_cast<double>(input)) hi = static_cast<double>(input);
+    count = static_cast<uint32_t>(guest::to_int64(hi)) - first;
+}
+
+// A filtered channel value: normalised by the kernel's sum, clamped to 0..255 and rounded.
+uint8_t channel(double v, double sum) {
+    if (sum != 0.0 && sum != 1.0) v = v / sum;
+    if (v < 0.0) v = 0.0;
+    if (255.0 < v) v = 255.0;
+    int i = guest::to_int(v);
+    double frac = v - static_cast<double>(i & 0xff);
+    if (frac < 0.0) frac = -frac;
+    if (0.5 <= frac) i++;
+    return static_cast<uint8_t>(i);
+}
+
+uint32_t malloc_array(uint32_t n, uint32_t size) {  // operator new[] with the overflow check
+    const uint64_t bytes = static_cast<uint64_t>(n) * size;
+    return guest::call_cdecl(0x496c14, bytes > 0xffffffffu ? 0xffffffffu : static_cast<uint32_t>(bytes));
+}
+
+}  // namespace
+
+// Scales a 32-bit surface to another's size (0x401250): Lanczos filtering, first along the rows into a
+// buffer of src.h rows of dst.w pixels, then along the columns into dst. Each pass computes its kernel
+// once per output pixel (on the first line) into a std::vector<double>.
+void scale_surface(SdlSurfaceRef src_ref, SdlSurfaceRef dst_ref) {
+    const SdlSurface &src = *sdl::surface(src_ref), &dst = *sdl::surface(dst_ref);
+    Lanczos lx(static_cast<double>(dst.w) / static_cast<double>(src.w), src.w);
+    guest::Local<MsVector<double>> kernel_x;
+    guest::call_thiscall(0x401e50, kernel_x.get(), lx.taps);  // vector<double>(taps)
+    const uint32_t rows = malloc_array(static_cast<uint32_t>(src.h), 4);
+    auto row = [rows](int y) { return &guest::at<uint8_t>(guest::at<uint32_t>(rows + 4u * static_cast<uint32_t>(y))); };
+    for (int y = 0; y < src.h; y++)
+        guest::at<uint32_t>(rows + 4u * static_cast<uint32_t>(y)) = malloc_array(static_cast<uint32_t>(dst.w), 4);
+    if (lx.support <= 0.5) {
+        lx.support = 0.500000000001;
+        lx.s = 1.0;
+    }
+    for (int x = 0; x < dst.w; x++) {
+        double centre, sum = 0.0, acc[4] = {};
+        uint32_t first, count;
+        input_range(lx, x, src.w, centre, first, count);
+        double pos = (static_cast<double>(first) - centre) + 0.5;
+        for (int y = 0; y < src.h; y++) {
+            for (uint32_t k = 0; k < count; k++) {
+                if (y == 0) {
+                    const double w = lx.weight(pos);
+                    pos = pos + 1.0;
+                    (*kernel_x)[static_cast<int>(k)] = w;
+                    sum = w + sum;
+                }
+                const double w = (*kernel_x)[static_cast<int>(k)];
+                const uint8_t *p = &guest::at<uint8_t>(src.pixels + src.pitch * static_cast<uint32_t>(y) + (first + k) * 4);
+                for (int c = 0; c < 4; c++) acc[c] = static_cast<double>(p[c]) * w + acc[c];
+            }
+            uint8_t *out = row(y) + x * 4;
+            for (int c = 0; c < 4; c++) {
+                out[c] = channel(acc[c], sum);
+                acc[c] = 0.0;
+            }
+        }
+    }
+
+    Lanczos ly(static_cast<double>(dst.h) / static_cast<double>(src.h), src.h);
+    guest::Local<MsVector<double>> kernel_y;
+    guest::call_thiscall(0x401e50, kernel_y.get(), ly.taps);
+    if (ly.support <= 0.5) {
+        ly.support = 0.500000000001;
+        ly.s = 1.0;
+    }
+    for (int y = 0; y < dst.h; y++) {
+        double centre, sum = 0.0, acc[4] = {};
+        uint32_t first, count;
+        input_range(ly, y, src.h, centre, first, count);
+        double pos = (static_cast<double>(first) - centre) + 0.5;
+        for (int x = 0; x < dst.w; x++) {
+            for (uint32_t k = 0; k < count; k++) {
+                if (x == 0) {
+                    const double w = ly.weight(pos);
+                    pos = pos + 1.0;
+                    (*kernel_y)[static_cast<int>(k)] = w;
+                    sum = w + sum;
+                }
+                const double w = (*kernel_y)[static_cast<int>(k)];
+                const uint8_t *p = row(static_cast<int>(first + k)) + x * 4;
+                for (int c = 0; c < 4; c++) acc[c] = static_cast<double>(p[c]) * w + acc[c];
+            }
+            uint8_t *out = &guest::at<uint8_t>(dst.pixels + dst.pitch * static_cast<uint32_t>(y) + static_cast<uint32_t>(x) * 4);
+            for (int c = 0; c < 4; c++) {
+                out[c] = channel(acc[c], sum);
+                acc[c] = 0.0;
+            }
+        }
+    }
+
+    for (int y = 0; y < src.h; y++) guest::call_cdecl(0x496bd7, guest::at<uint32_t>(rows + 4u * static_cast<uint32_t>(y)));  // free
+    guest::call_cdecl(0x496bd7, rows);
+    if (kernel_y->first) guest::call_stdcall(0x401ed0, kernel_y->first, (kernel_y->end.a - kernel_y->first.a) >> 3);
+    if (kernel_x->first) guest::call_stdcall(0x401ed0, kernel_x->first, (kernel_x->end.a - kernel_x->first.a) >> 3);
+}
+
 // Converts a loaded image to the display format, scaled to w × h if it is not that size already (with
 // alpha if it has any). Frees the source surface.
 SdlSurfaceRef surface_fit(SdlSurfaceRef src, int w, int h) {
@@ -237,7 +375,7 @@ SdlSurfaceRef surface_fit(SdlSurfaceRef src, int w, int h) {
     SdlSurfaceRef scaled = guest::call_import(IMP_SDL_CreateRGBSurface, 0u, w, h, 32u, 0xffu, 0xff00u, 0xff0000u, 0xff000000u);
     SdlSurfaceRef rgba = guest::call_import(IMP_SDL_ConvertSurface, src, sdl::surface(scaled)->format.a, 0u);
     sdl::FreeSurface(src);
-    guest::call_regs(0x401250, rgba, scaled);  // scale_surface(src, dst) (not rewritten yet)
+    scale_surface(rgba, scaled);
     sdl::FreeSurface(rgba);
     SdlSurfaceRef out = guest::call_import(alpha ? IMP_SDL_DisplayFormatAlpha : IMP_SDL_DisplayFormat, scaled);
     if (alpha) guest::call_import(IMP_SDL_SetAlpha, out, 0x10000u, 0u);  // here on the result, not the source

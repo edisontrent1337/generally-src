@@ -58,6 +58,13 @@ inline int64_t to_int64(float x) {
     return static_cast<int64_t>(x);
 }
 
+// the CRT double -> 64-bit integer helper (0x497fd1, _dtol3): truncates; NaN and out-of-range values give
+// INT64_MIN
+inline int64_t to_int64(double x) {
+    if (!(x > -9223372036854775808.0 && x < 9223372036854775808.0)) return INT64_MIN;
+    return static_cast<int64_t>(x);
+}
+
 // operator new / sized operator delete of the original (its heap, so block addresses match)
 inline void *op_new(uint32_t n);
 inline void op_delete(void *p, uint32_t n);

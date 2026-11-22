@@ -32,6 +32,7 @@ void screenshot_save(const MsString *path, uint32_t w, uint32_t h);
 void screenshot_take(uint32_t w, uint32_t h);
 bool surface_has_alpha(SdlSurfaceRef s);
 SdlSurfaceRef surface_fit(SdlSurfaceRef src, int w, int h);
+void scale_surface(SdlSurfaceRef src, SdlSurfaceRef dst);
 bool blit_background(int16_t w, int16_t h, int16_t x, int16_t y);
 void fill_rect_corners(uint32_t color, int16_t x1, int16_t y1, int16_t x2, int16_t y2);
 void fill_rect(uint32_t color, int16_t x, int16_t y, uint16_t w, uint16_t h);

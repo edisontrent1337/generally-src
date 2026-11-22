@@ -579,3 +579,9 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   decompiler loses the sin / cos results; the disc radius is in xmm1: 0.3, 0.2 splash / crew dust, 0.15
   dust, 0.4 bubble). Shadow-checked through a temporary guest call (20k calls, 0 mismatches). Still
   uncovered: exhaust smoke and dust under water.
+- 2026-11-22 (cont.): 0x401250 `scale_surface` (video.cpp, F11 screenshots at the gr.ini size): two-pass
+  Lanczos resampling in double precision (3 lobes, 2 below scale 0.67, 1 at 0.5 and below; kernel
+  sin(t/a)·(sin(t)·a)/t², computed once per output pixel into a vector<double> (0x401e50); channels
+  normalised by the kernel sum, clamped to 0..255 and rounded by the fractional part). Not shadow-
+  checkable (the CRT sin calls _except1); verified by the written screenshot files: scenarios
+  screenshot (0.5), screenshot_up (1024 x 768) and screenshot_mid (0.6) patch gr.ini's size.
