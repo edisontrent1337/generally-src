@@ -1,5 +1,5 @@
 # third-party game files (GeneRally 1.2d install; see README)
-game/orig/
+# game/orig/
 # generated: Ghidra project, p-code, lifted C, objects, binaries, test runs
 build/
 __pycache__/
