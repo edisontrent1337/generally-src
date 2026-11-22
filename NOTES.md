@@ -585,3 +585,8 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   normalised by the kernel sum, clamped to 0..255 and rounded by the fractional part). Not shadow-
   checkable (the CRT sin calls _except1); verified by the written screenshot files: scenarios
   screenshot (0.5), screenshot_up (1024 x 768) and screenshot_mid (0.6) patch gr.ini's size.
+- 2026-11-22 (cont.): 0x46a040 `box_draw_pixels` (render.cpp): box_draw's box drawn through
+  triangle_for_each_pixel (g_pixel_fn, colour in ECX, 12 float stack arguments: centre, a, b, h). The
+  corner computation and triangle table are now shared with box_draw (the decompiler printed the corner
+  sums as (b + a) + base; the code adds b + (a + base) like box_draw). Shadow-checked over the suite
+  (called while the race view is built).

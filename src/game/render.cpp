@@ -602,13 +602,15 @@ void shaded_triangle(uint8_t colour, bool always, float x0, float y0, float z0, 
     }
 }
 
-// A solid box in the race view (0x4170a0): centre c, half-axes a, b, h (corners c +- h +- a +- b),
-// projected through the race camera and drawn as ten flat triangles in colour 0xa8, depth tested: the
-// faces at +b, +-a and +-h (the face at -b is not drawn).
-void box_draw(const Vec3 &c, const Vec3 &a, const Vec3 &b, const Vec3 &h) {
-    struct P {
-        float x, y, z;
-    } p[8] = {};
+namespace {
+// A box's corners c +- h +- a +- b relative to the eye (w) and projected through the race camera (x, y and
+// view distance z; x and y stay 0 behind the camera): 0 (+h +a +b), 1 (+h -a +b), 2 (-h +a +b),
+// 3 (-h -a +b), 4..7 the same with -b.
+struct BoxCorner {
+    float x, y, z;
+    float w[3];
+};
+void box_corners(const Vec3 &c, const Vec3 &a, const Vec3 &b, const Vec3 &h, BoxCorner p[8]) {
     const Vec3 &eye = g_view_eye, &fw = g_view_forward, &rt = g_view_right, &dn = g_view_down;
     const float K = g_start_light_depth;
     for (int i = 0; i < 8; i++) {
@@ -619,19 +621,42 @@ void box_draw(const Vec3 &c, const Vec3 &a, const Vec3 &b, const Vec3 &h) {
             return (bp ? bb + t : t - bb) - e;
         };
         float x = axis(c.x, a.x, b.x, h.x, eye.x), y = axis(c.y, a.y, b.y, h.y, eye.y), z = axis(c.z, a.z, b.z, h.z, eye.z);
+        p[i].w[0] = x;
+        p[i].w[1] = y;
+        p[i].w[2] = z;
         float d = (y * fw.y + x * fw.x) + z * fw.z;
         p[i].z = d;
+        p[i].x = p[i].y = 0.0f;
         if (d > 0.0001f) {
             p[i].x = (((y * rt.y + x * rt.x) + z * rt.z) / d + 0.5f) * K;
             p[i].y = (((y * dn.y + x * dn.x) + z * dn.z) / d + g_screen_aspect * 0.5f) * K;
         }
     }
-    // corners: 0 (+h +a +b), 1 (+h -a +b), 2 (-h +a +b), 3 (-h -a +b), 4..7 the same with -b
-    static const uint8_t kTri[10][3] = {{0, 1, 2}, {3, 2, 1}, {6, 0, 2}, {4, 0, 6}, {1, 7, 3},
-                                        {1, 5, 7}, {4, 1, 0}, {5, 1, 4}, {3, 6, 2}, {3, 7, 6}};
-    for (const auto &tr : kTri) {
-        const P &u = p[tr[0]], &v = p[tr[1]], &w = p[tr[2]];
+}
+// the faces at +b, +-a and +-h (the face at -b is not drawn), two triangles each
+constexpr uint8_t kBoxTriangles[10][3] = {{0, 1, 2}, {3, 2, 1}, {6, 0, 2}, {4, 0, 6}, {1, 7, 3},
+                                          {1, 5, 7}, {4, 1, 0}, {5, 1, 4}, {3, 6, 2}, {3, 7, 6}};
+}  // namespace
+
+// A solid box in the race view (0x4170a0): centre c, half-axes a, b, h, drawn as ten flat triangles in
+// colour 0xa8, depth tested.
+void box_draw(const Vec3 &c, const Vec3 &a, const Vec3 &b, const Vec3 &h) {
+    BoxCorner p[8];
+    box_corners(c, a, b, h, p);
+    for (const auto &tr : kBoxTriangles) {
+        const BoxCorner &u = p[tr[0]], &v = p[tr[1]], &w = p[tr[2]];
         shaded_triangle(0xa8, false, u.x, u.y, u.z, v.x, v.y, v.z, w.x, w.y, w.z, 0.0f, 0.0f, 0.0f);
+    }
+}
+
+// The same box drawn pixel by pixel through g_pixel_fn (0x46a040), which gets `colour`.
+void box_draw_pixels(uint8_t colour, const Vec3 &c, const Vec3 &a, const Vec3 &b, const Vec3 &h) {
+    BoxCorner p[8];
+    box_corners(c, a, b, h, p);
+    for (const auto &tr : kBoxTriangles) {
+        const BoxCorner &u = p[tr[0]], &v = p[tr[1]], &w = p[tr[2]];
+        const float su[3] = {u.x, u.y, u.z}, sv[3] = {v.x, v.y, v.z}, sw[3] = {w.x, w.y, w.z};
+        triangle_for_each_pixel(colour, su, sv, sw, u.w, v.w, w.w);
     }
 }
 

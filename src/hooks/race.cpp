@@ -125,3 +125,7 @@ REWRITE(407cd0, "car_step", 0, 0, RET_NONE) { car_step(static_cast<int>(ECX)); }
 REWRITE(40b890, "ai_drive", 1, 0, RET_NONE) { ai_drive(static_cast<int>(ECX), edx<int32_t>(c), argp<float>(c, 0), XMM_F(3, 0)); }
 REWRITE(41c760, "pit_crews_step", 0, 0, RET_NONE) { pit_crews_step(); }
 REWRITE(419840, "particles_update", 0, 0, RET_NONE) { particles_update(static_cast<int>(ECX)); }
+REWRITE(46a040, "box_draw_pixels", 12, 0, RET_NONE) {
+    box_draw_pixels(static_cast<uint8_t>(ECX), Vec3(argf(c, 0), argf(c, 1), argf(c, 2)), Vec3(argf(c, 3), argf(c, 4), argf(c, 5)),
+                    Vec3(argf(c, 6), argf(c, 7), argf(c, 8)), Vec3(argf(c, 9), argf(c, 10), argf(c, 11)));
+}
