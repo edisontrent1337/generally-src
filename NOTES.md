@@ -590,3 +590,9 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   corner computation and triangle table are now shared with box_draw (the decompiler printed the corner
   sums as (b + a) + base; the code adds b + (a + base) like box_draw). Shadow-checked over the suite
   (called while the race view is built).
+- 2026-11-22 (cont.): 0x485950 `car_models_load` (car_models.cpp): appends every cars\*.car (u32 record
+  size 0x540, u32 count, records; the array is reallocated to old + 1 + count models each time); without
+  any it builds the built-in "General" (43 values, ten vertices, sixteen triangles with colours 0 / 4,
+  vertex normals from summed cross products, five collision points, wheels) and writes cars\general.car.
+  New scenarios cars_missing (the written general.car is compared) and cars_extra (a second model file
+  and an invalid one). Uncovered: freeing an existing g_cars when nothing loads again.

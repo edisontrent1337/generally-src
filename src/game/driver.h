@@ -42,6 +42,8 @@ static_assert(sizeof(CarModel) == 0x540);
 
 GLOBAL(ptr32<CarModel>, g_cars, 0x4a4d44);
 GLOBAL(int32_t, g_car_count, 0x4a4c90);
+// Loads every cars\*.car into g_cars; without any, makes and saves the built-in model "General" (0x485950).
+void car_models_load();
 GLOBAL(ptr32<Driver>, g_drivers, 0x4a4c98);
 
 struct GameFile;

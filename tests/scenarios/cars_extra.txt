@@ -1,0 +1,4 @@
+# Car model files: a second copy of Cars.car (appended after the first file's models) and a file that is
+# not a model file (a driver file renamed, skipped); the car pick list on the driver page shows them all.
+copy: cars/Cars.car -> cars/More.car, drivers/Blue.drv -> cars/Bad.car
+script: 14000:snap:1,14500:quit:0

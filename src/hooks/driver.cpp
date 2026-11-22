@@ -10,3 +10,4 @@ REWRITE(443870, "driver_write", 0, 0, RET_EAX) { ret(c, static_cast<uint32_t>(dr
 REWRITE(486e40, "driver_load", 0, 0, RET_NONE) { driver_load(ecx<Driver>(c), edx<MsString>(c)); }
 REWRITE(4429d0, "driver_read", 0, 0, RET_EAX) { ret(c, static_cast<uint32_t>(driver_read(ecx<GameFile>(c), edx<Driver>(c)))); }
 REWRITE(487470, "driver_delete", 0, 0, RET_NONE) { driver_delete(ecx<MsString>(c)); }
+REWRITE(485950, "car_models_load", 0, 0, RET_NONE) { car_models_load(); }

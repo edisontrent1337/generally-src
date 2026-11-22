@@ -1,0 +1,4 @@
+# No car models: cars\Cars.car removed, so the game builds its built-in model "General" and saves it as
+# cars\general.car (the file is compared); then a short race with it.
+remove: cars/Cars.car
+script: 14000:click:430:96,14100:click:430:96,14500:click:116:288,14700:click:560:464,21000:down:32,21200:up:32,23000:down:273,30000:snap:1,32000:quit:0
