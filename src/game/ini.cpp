@@ -278,7 +278,6 @@ int ini_load(IniFile *ini) {
 
 // gr.ini settings (globals 0x4a4dc8..0x4a4df0, int32 each).
 GLOBAL(int32_t, g_cfg_video_memory, 0x4a4dd0);
-GLOBAL(int32_t, g_cfg_faster_preview, 0x4a4dd4);
 GLOBAL(int32_t, g_cfg_tyre_autosort, 0x4a4dd8);
 GLOBAL(int32_t, g_cfg_alt_speed, 0x4a4de8);
 

@@ -37,3 +37,9 @@ int track_load();
 // "\name" or "\folder\name".
 struct MsString;
 int track_preview_load(const MsString *name);
+// The static scene (terrain, walls, posts, objects if asked, water) into the background surface, which
+// stays locked.
+void track_scene_draw(bool objects);
+// Loads a track and draws its preview (w wide, h high) into the background surface (0x491870); 0, or -1
+// if the track could not be loaded. name is a guest C string.
+int track_preview_render(const char *name, int w, int h);

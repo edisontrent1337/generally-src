@@ -618,3 +618,11 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   its triangles, which come in model order, the rest after), and the '$' objects are not drawn at all.
   New scenario race_unsorted (gr.ini patched, pit stops); shadow-checked, 0 mismatches. Uncovered there: a
   wheel carried by the tyre crew (same code shape as the covered sorted path).
+- 2026-11-22 (cont.): 0x491870 `track_preview_render` (track_scene.cpp, ECX name, EDX width, stack
+  height; 0 / -1): reseeds rand() from SDL_GetTicks and refills the random table, reallocates the depth
+  buffer, track image, tile / height maps and shade tables, loads the preview (track_preview_load),
+  draws the scene and frees it all again (the objects with sized delete). The scene (track_scene_draw:
+  terrain cells as four triangles around their centre, the four side walls as strips joined between
+  cross-sections, corner posts via box_draw_pixels, the objects via 0x44fa10 unless FasterTrackPreview,
+  the water plane) is shared with race_setup_view (0x4486c0). Verified by whole-run traces (file I/O).
+  track_preview_load now returns its result (0 / -1), which this function uses.
