@@ -129,3 +129,4 @@ REWRITE(46a040, "box_draw_pixels", 12, 0, RET_NONE) {
     box_draw_pixels(static_cast<uint8_t>(ECX), Vec3(argf(c, 0), argf(c, 1), argf(c, 2)), Vec3(argf(c, 3), argf(c, 4), argf(c, 5)),
                     Vec3(argf(c, 6), argf(c, 7), argf(c, 8)), Vec3(argf(c, 9), argf(c, 10), argf(c, 11)));
 }
+REWRITE(40f7f0, "race_view_draw_sorted", 0, 0, RET_NONE) { race_view_draw_sorted(); }

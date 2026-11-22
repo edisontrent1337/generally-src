@@ -37,5 +37,7 @@ void car_preview_draw(uint32_t colour_base, const uint8_t *model, int x, int y, 
 void shaded_triangle(uint8_t colour, bool always, float x0, float y0, float z0, float x1, float y1, float z1, float x2,
                      float y2, float z2, float s0, float s1, float s2);
 void box_draw(const Vec3 &c, const Vec3 &a, const Vec3 &b, const Vec3 &h);
+// The cars, crews and ghost in the race view, far to near (0x40f7f0).
+void race_view_draw_sorted();
 void box_draw_pixels(uint8_t colour, const Vec3 &c, const Vec3 &a, const Vec3 &b, const Vec3 &h);
 void wheel_spray(int p, int w, float size, float strength);

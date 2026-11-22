@@ -603,3 +603,13 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   no ghost, and the camera fits the height with the plain aspect and no zoom correction. Its tile-run
   buffer has no spare run (track_load's has one): a 2-byte difference in a freed heap block was the only
   trace difference until that was matched (found by dumping the heap with GRX_DUMP on SIGALRM).
+- 2026-11-22 (cont.): 0x40f7f0 `race_view_draw_sorted` (car_render.cpp, g_draw_view with TyreAutoSort):
+  cars and crew sorted by depth (insertion sort), the ghost's last frame undrawn (ghost model =
+  g_record_car[1]), shadows (b19: collision points dropped onto the plane through the wheel contacts,
+  written back into the car state; wheels carried by the tyre crew; crew discs), cars (wheels lifted /
+  carried, vertex shading, triangles interleaved with the depth-sorted wheels) and crew members (four
+  discs), then '$' objects (box + three stacked rings). Values shared through the original's variables
+  are kept: projected vertices, wheel screen slots (the shadow plane's edge vectors land in slots 3..11),
+  and the "last screen position" for discs behind the camera (also written with normals). Disc radii are
+  in xmm1 (wheel radius from model +0x1c, 0.3 fifth point, crew 0.5 / 0.5 / 0.4 / 0.3). Shadow-checked
+  over the suite (1.7k calls, 0 mismatches) after fixing the shadow centre's sum order (W0+W1+W2+W3).
