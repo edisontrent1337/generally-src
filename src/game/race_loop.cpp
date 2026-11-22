@@ -313,7 +313,7 @@ void race_loop_step() {
     if (state < 8) {
         lock_surface(SURF_BACK);
         guest::call_regs(g_draw_view, 0, 0);
-        guest::call_regs(0x419840, static_cast<uint32_t>(frames), 0);  // cars, effects (not rewritten yet)
+        particles_update(frames);
         for (int i = 0; i < g_player_count; i++) hud_draw_gauges(i);
         if (g_timed_race && !g_unknown_4a4792) draw_race_clock();
         unlock_surface();
@@ -322,7 +322,7 @@ void race_loop_step() {
         draw_replay_hud();
     } else {
         lock_surface(1);
-        guest::call_regs(0x419840, static_cast<uint32_t>(frames), 0);
+        particles_update(frames);
         unlock_surface();
         frame_present();
     }

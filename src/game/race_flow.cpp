@@ -36,7 +36,7 @@ void race_draw_scene() {
         g_locked = back;
     }
     guest::call_regs(g_draw_track, 0, 0);
-    guest::call_regs(0x419840, 0, 0);
+    particles_update(0);
     for (int p = 0; p < g_player_count; p++) {
         hud_draw_gauges(p);
         if (!g_racing) continue;
@@ -94,7 +94,7 @@ void race_render_dimmed() {
         g_locked = back;
     }
     guest::call_regs(g_draw_track, 0, 0);
-    guest::call_regs(0x419840, 0, 0);
+    particles_update(0);
     for (int p = 0; p < g_player_count; p++) hud_draw_gauges(p);
     guest::Local<uint8_t[0x400]> palette;  // SDL_Color[256]: r, g, b, unused
     palette_store(reinterpret_cast<uint32_t *>(*palette));

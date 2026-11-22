@@ -59,6 +59,9 @@ static_assert(sizeof(Particle) == 0x1c);
 
 inline Particle &particle(uint16_t i) { return guest::at<Particle>(g_unknown_4a4774 + i * 0x1cu); }
 
+// Moves the particles by `frames` race frames and draws them (0x419840).
+void particles_update(int frames);
+
 // Moves the particle slot on, wrapping at the list size.
 inline void next_particle() {
     const uint16_t s = g_unknown_4a4794;

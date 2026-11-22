@@ -572,3 +572,10 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   Shadow-checked through a temporary guest call (22.7k calls, 0 mismatches; the decompiler had the jack
   torque's association wrong: inv_inertia * (offset * k)). All lines covered by the pits_* scenarios.
   Particle / next_particle / g_gravity moved to race_state.h.
+- 2026-11-22 (cont.): 0x419840 `particles_update` (particles.cpp, ECX = frames): moves and draws the
+  particle list. Types 0/2/3/5..7 drift with random turbulence (smoke, dust), 1/4/8/14..18 fall with drag
+  (splash, spray, crew dust, fragments), 9..13 fall freely and burst into ten fragments (type + 5) when
+  they expire. Clouds are discs placed by the random table: x = cos(a)·r + sx, y = sin(a)·r + sy (the
+  decompiler loses the sin / cos results; the disc radius is in xmm1: 0.3, 0.2 splash / crew dust, 0.15
+  dust, 0.4 bubble). Shadow-checked through a temporary guest call (20k calls, 0 mismatches). Still
+  uncovered: exhaust smoke and dust under water.
