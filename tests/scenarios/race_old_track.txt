@@ -1,0 +1,4 @@
+# A track of file version 0x103 (Agari from "Old Tracks": no zoom byte, no gates), copied in as the first
+# entry of the default folder: five drivers race it with the human Player accelerating, then quit.
+copy: tracks/[Old Tracks]/Agari.trk -> tracks/[Default Tracks]/Agari.trk
+script: 14000:click:430:96,14100:click:430:96,14200:click:430:96,14300:click:430:96,14400:click:430:96,14500:click:116:288,14700:click:560:464,21000:key:32,23000:down:273,30000:snap:1,36000:quit:0

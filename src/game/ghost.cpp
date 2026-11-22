@@ -314,8 +314,6 @@ int car_models_read(GameFile *f, uint8_t *models, int count) {
     return total;
 }
 
-GLOBAL(uint32_t[4], g_checksum_seed, 0x4a4030);
-
 // Appends (or renews) the checksum trailer of a track file: a 4-byte marker and 16 bytes of checksum over
 // the bytes from `start` to the trailer. A file whose 20th byte from the end does not hold the marker gets
 // a new marker at its end first. (The marker is 0x4752 xor whether the seek before it succeeded.) A file

@@ -40,3 +40,8 @@ IniEntry *ini_set_string(IniSection *s, const char *key, const char *v);
 IniEntry *ini_entry_construct(IniEntry *e);
 int ini_load(IniFile *ini);
 void settings_load();
+
+// gr.ini [Viewport]: race camera overrides (0x7fff / 0: use the track's own)
+GLOBAL(int32_t, g_cfg_view_angle, 0x4a4ddc);  // tilt, degrees
+GLOBAL(int32_t, g_cfg_rotation, 0x4a4de0);    // rotation, degrees
+GLOBAL(int32_t, g_cfg_zoom, 0x4a4de4);        // camera distance, percent

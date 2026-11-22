@@ -107,7 +107,23 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   widgets 0x4a4c9c. Bug of the original, kept: Reset frees the track path and then reopens the dialog
   with the freed pointer, so the reopened dialog shows no track (name empty, 0 m).
 
+- Track file (.trk, loaded by track_load 0x43d390, src/game/track_load.cpp has the full layout): versions
+  0x100 (no header), 0x103 (Old Tracks), 0x105 (World Tour), 0x120 (Default Tracks; adds pit lane gates);
+  files newer than 0x124 are refused. Tile map: run-length encoded kinds 0..12 painted over type 0x10,
+  several with rand() (same calls, same order as the original). Pit box (0x188): +0 state, +1..+8 crew
+  timers, +0x0c/+0x2c wall normals x/z, +0x4c wall points 0.7 above ground, +0x10c wall points, +0x16c
+  centre, +0x178 heading, +0x184 car (shared pits). TrackObject +0x10 is the heading (cos a, 0, -sin a).
+  The file's checksum (over the bytes before the trailer) is g_checksum_seed, the records' checksum seed.
+  Camera: g_view_* axes from tilt / rotation (gr.ini Viewport overrides), the eye fitted to the four
+  corners, scaled by g_view_zoom (0x4a4db8); its aspect correction only runs for zoom < 1 at screen
+  aspects other than 0.75.
+
 ## Harness facts
+
+- Compiler: Apple clang 21 miscompiles the lifted checksum loop of track_load (0x43f730, `a[i & 3] += ...`)
+  when it auto-vectorises it: 64 bytes are stored instead of 16, overwriting gravity (0x4a4054) and the
+  globals after it. Both builds then run with garbage gravity (the original survives because guest
+  addresses wrap; rewritten code faults on NaN positions). The Makefile builds with -fno-vectorize.
 
 - The install has no options.set: every run starts with the race-option defaults unless a scenario puts
   tests/fixtures/options.set in place. GetCommandLineA returns `.\GR12.exe`: the game takes everything up
@@ -536,3 +552,12 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   (five AI drivers, high fuel use, two minutes) cover the pit lane, box claims and crew waits. Still
   uncovered: races in minutes (length unit 2), backing up towards a box that faces away, pitting for
   damage, the pit-lane aim wrapping past the racing line's end.
+- 2026-11-22: set up on a second machine (Ghidra 12.2, Apple clang 21; see the vectorisation note under
+  Harness facts). 0x43d390 `track_load` (track_load.cpp): header, tile map with its random wear, heights,
+  objects, pit boxes, checkpoints / gates, finish line painting, racing and pit lines, pit entry / rejoin,
+  trailer (records, ghost), checksum, camera. Its callers are rewritten, so it is verified by the
+  whole-run traces (and it does file I/O, so it could not be shadow-checked anyway). New scenarios
+  race_old_track (version 0x103) and race_world_track (0x105, size 200). Still uncovered: versions below
+  0x102 (no such file ships), the refused newer version, a missing track file, the zoom aspect correction.
+  The track-layout globals (checkpoints, gates, racing / pit line, pit entry / rejoin) now live in track.h,
+  worn_tile in track.cpp, the viewport settings in ini.h.

@@ -28,20 +28,9 @@
 #include "game/sound.h"
 #include "game/track.h"
 
-GLOBAL(uint16_t, g_object_count, 0x4a47f0);    // entries of g_objects; 0..5 are the cars
 GLOBAL(Vec3, g_gravity, 0x4a4054);             // per second
-GLOBAL(uint8_t, g_checkpoint_count, 0x4a4731);
-GLOBAL(uint32_t, g_checkpoints, 0x4a477c);     // Segment[g_checkpoint_count]
-GLOBAL(uint8_t, g_gate_count, 0x4a475f);
-GLOBAL(uint32_t, g_gates, 0x4a47e8);           // Segment[g_gate_count]
 
 namespace {
-// A line segment across the track: start, unit direction, length.
-struct Segment {
-    float x, z, dx, dz, length;
-};
-static_assert(sizeof(Segment) == 0x14);
-
 // An entry of the particle list (g_unknown_4a4774): smoke, spray, dust, splashes.
 struct Particle {
     uint8_t type, life;
@@ -88,20 +77,6 @@ struct Car {
     Vec3 &wheel(int w) const { return v(0xe8 + 0xc * (m[0xbd] + w)); }
     uint8_t &effect(int w) const { return s[4 + w]; }
 };
-
-// Turns tile type t into the "worn" type (0x28..0x2f) of its group; types 0x18..0x1b and >= 0x28 stay.
-uint8_t worn_tile(uint8_t t) {
-    if (t == 0) return 0x28;
-    if (t < 8) return 0x29;
-    if (t < 0x10) return 0x2a;
-    if (t < 0x14) return 0x2b;
-    if (t < 0x18) return 0x2c;
-    if (t < 0x1c) return t;
-    if (t < 0x20) return 0x2d;
-    if (t < 0x24) return 0x2e;
-    if (t < 0x28) return 0x2f;
-    return t;
-}
 
 // The tile type a worn tile wears back to (0x28 -> 0, 0x29 -> 1, ...); other types go to 0.
 int unworn_tile(uint8_t t) {

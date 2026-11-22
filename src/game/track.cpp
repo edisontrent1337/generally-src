@@ -3,6 +3,19 @@
 
 #include "game/fmath.h"
 
+uint8_t worn_tile(uint8_t t) {
+    if (t == 0) return 0x28;
+    if (t < 8) return 0x29;
+    if (t < 0x10) return 0x2a;
+    if (t < 0x14) return 0x2b;
+    if (t < 0x18) return 0x2c;
+    if (t < 0x1c) return t;
+    if (t < 0x20) return 0x2d;
+    if (t < 0x24) return 0x2e;
+    if (t < 0x28) return 0x2f;
+    return t;
+}
+
 // Terrain height below p (x/z, y ignored): bilinear interpolation of the four surrounding grid points;
 // heights are stored in units of 0.05. Positions are clamped to the track.
 float terrain_height(Vec3 p) {

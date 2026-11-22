@@ -13,6 +13,7 @@
 #include "game/replay.h"
 #include "game/selected_tracks.h"
 #include "game/sound.h"
+#include "game/track.h"
 #include "game/video.h"
 #include "orig/sdl.h"
 #include "bridge/imports.h"
@@ -223,7 +224,7 @@ int game_load(const MsString *name) {
     }
     effects_volume_apply();
     g_racing = 1;
-    if (static_cast<int32_t>(guest::call_regs(0x43d390, 0, 0)) == -1) {  // load the track
+    if (track_load() == -1) {
         if (g_background) sdl::FillRect(g_background, nullptr, 100);
         if (g_current_track + 1 < g_track_count) {
             g_current_track = g_current_track + 1;

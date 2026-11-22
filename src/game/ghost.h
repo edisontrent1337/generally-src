@@ -31,6 +31,8 @@ GLOBAL(char[kRecords][13], g_record_name, 0x4a4ca0);      // driver name
 GLOBAL(uint8_t[kRecords][0x540], g_record_car, 0x4a6b90); // the car's model record
 GLOBAL(SystemTime[kRecords], g_record_date, 0x4a4e58);
 GLOBAL(uint8_t[0x540], g_race_car, 0x4a9050);  // model record of the car racing (the first driver's)
+// checksum of the loaded track file (track_load), the start value of the records' checksum
+GLOBAL(uint32_t[4], g_checksum_seed, 0x4a4030);
 
 // In files every second frame is stored, packed: position ×150 as ints, the two direction vectors
 // ×120 as signed bytes (the third, their cross product, is recomputed).

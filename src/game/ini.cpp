@@ -280,9 +280,6 @@ int ini_load(IniFile *ini) {
 GLOBAL(int32_t, g_cfg_video_memory, 0x4a4dd0);
 GLOBAL(int32_t, g_cfg_faster_preview, 0x4a4dd4);
 GLOBAL(int32_t, g_cfg_tyre_autosort, 0x4a4dd8);
-GLOBAL(int32_t, g_cfg_view_angle, 0x4a4ddc);
-GLOBAL(int32_t, g_cfg_rotation, 0x4a4de0);
-GLOBAL(int32_t, g_cfg_viewport_4a4de4, 0x4a4de4);
 GLOBAL(int32_t, g_cfg_alt_speed, 0x4a4de8);
 
 // Reads gr.ini: every setting starts at its default and is replaced by an integer value of the same
@@ -296,7 +293,7 @@ void settings_load() {
     g_cfg_tyre_autosort = 1;
     g_cfg_view_angle = 0x7fff;
     g_cfg_rotation = 0x7fff;
-    g_cfg_viewport_4a4de4 = 0;
+    g_cfg_zoom = 0;
     g_cfg_alt_speed = 0;
     g_screenshot_w = 320;
     g_screenshot_h = 240;
@@ -311,7 +308,7 @@ void settings_load() {
             {0x49da04, 0x49da24, &g_cfg_tyre_autosort},
             {0x49da40, 0x49da34, &g_cfg_view_angle},     // Viewport
             {0x49da40, 0x49da4c, &g_cfg_rotation},
-            {0x49da40, 0x49da58, &g_cfg_viewport_4a4de4},
+            {0x49da40, 0x49da58, &g_cfg_zoom},
             {0x49da78, 0x49da60, &g_cfg_alt_speed},
             {0x49da78, 0x49da80, &g_screenshot_w},
             {0x49da78, 0x49da90, &g_screenshot_h},

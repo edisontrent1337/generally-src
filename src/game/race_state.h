@@ -18,6 +18,7 @@ struct PitBox {
 static_assert(sizeof(PitBox) == 0x188);
 GLOBAL(uint8_t, g_pit_count, 0x4a475e);
 GLOBAL(ptr32<PitBox>, g_pits, 0x4a4780);
+GLOBAL(uint8_t, g_pit_shared, 0x4a4732);       // nonzero: each car uses the pit box of its own number
 
 GLOBAL(int32_t, g_replay_frames, 0x4a51b8);  // recorded replay frames
 GLOBAL(float, g_replay_step, 0x4aafe8);      // 1 / g_replay_rate: recorded frames per race frame

@@ -802,7 +802,7 @@ void race_grid_setup() {
         Vec3 &pos = V(0x58), &r0 = V(0x7c), &r1 = V(0x88), &r2 = V(0x94);
         pos = slot.pos;
         terrain_sample(&pos, &r1);
-        r2 = *reinterpret_cast<const Vec3 *>(slot.unknown10);
+        r2 = slot.heading;
         float a1 = r1.x, b1 = r1.y, c1 = r1.z;
         r0.x = b1 * r2.z - c1 * r2.y;
         r0.y = r2.x * c1 - a1 * r2.z;

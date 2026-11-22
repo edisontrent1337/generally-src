@@ -1,18 +1,21 @@
-// Loose objects on the track (balls).
+// The track's objects: the start positions (0..5, one per car) and loose objects (balls).
 #pragma once
 #include "bridge/guest.h"
 #include "game/vec3.h"
 
 struct TrackObject {
-    uint32_t unknown00;
+    uint8_t type;  // from the track file
+    uint8_t unknown01[3];
     Vec3 pos;  // +0x04
-    uint8_t unknown10[0x10];
+    Vec3 heading;  // +0x10: (cos a, 0, -sin a)
+    uint8_t unknown1c[4];
     float mass;  // +0x20
     Vec3 vel;  // +0x24
     float radius;  // +0x30
 };
 static_assert(sizeof(TrackObject) == 0x34);
 GLOBAL(ptr32<TrackObject>, g_objects, 0x4a4744);
+GLOBAL(uint16_t, g_object_count, 0x4a47f0);    // entries of g_objects; 0..5 are the cars
 
 void object_collide_plane(int i, float px, float py, float pz, float nx, float ny, float nz, float thickness);
 void object_collide_line(int i, float px, float py, float pz, float dx, float dy, float dz, float thickness);

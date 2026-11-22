@@ -20,13 +20,6 @@
 #include "game/track.h"
 #include "game/vec3.h"
 
-GLOBAL(uint32_t, g_race_line, 0x4a473c);       // Vec3[g_race_line_count]
-GLOBAL(uint16_t, g_race_line_count, 0x4a47e0);
-GLOBAL(uint32_t, g_pit_line, 0x4a47ec);        // Vec3[g_pit_line_count]
-GLOBAL(uint8_t, g_pit_line_count, 0x4a475d);
-GLOBAL(uint8_t, g_pit_entry, 0x4a4730);        // racing-line point where the pit lane starts
-GLOBAL(uint8_t, g_pit_rejoin, 0x4a4793);       // racing-line point where it ends
-GLOBAL(uint8_t, g_pit_shared, 0x4a4732);       // nonzero: each car uses the pit box of its own number
 
 namespace {
 // The parts of a pit box (g_pits, 0x188 bytes) used here.

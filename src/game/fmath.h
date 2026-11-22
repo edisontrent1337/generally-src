@@ -35,3 +35,17 @@ inline float guest_sinf(float x) {
     guest::call_regs(0x405e40, 0, 0);
     return guest::xmm0();
 }
+
+// The CRT's double cos / sin (libm_sse2_cos_precise / _sin_precise through the thunks 0x49816e, 0x498180).
+inline double guest_cos(double x) {
+    CPU *c = guest::cpu();
+    XMM_D(0) = x;
+    guest::call_regs(0x49816e, 0, 0);
+    return XMM_D(0);
+}
+inline double guest_sin(double x) {
+    CPU *c = guest::cpu();
+    XMM_D(0) = x;
+    guest::call_regs(0x498180, 0, 0);
+    return XMM_D(0);
+}
