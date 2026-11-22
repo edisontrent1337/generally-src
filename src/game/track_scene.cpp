@@ -14,6 +14,12 @@
 #include "game/track.h"
 #include "game/video.h"
 #include "game/race_state.h"
+#include "game/menu.h"
+#include "game/race_options.h"
+#include "game/selected_tracks.h"
+#include "game/text.h"
+#include "game/ghost.h"
+#include "orig/render.h"
 #include "bridge/imports.h"
 
 namespace {
@@ -275,4 +281,137 @@ int track_preview_render(const char *name, int w, int h) {
     free_global(g_depth_buf);
     free_global(g_random_table);
     return 0;
+}
+
+namespace {
+// Text from a guest C string (e.g. the format function's buffer) into s, drawn at (x, y).
+void draw_cstr(MsString *s, uint32_t cstr, int x, int y, uint8_t colour, uint8_t shadow) {
+    const char *t = &guest::at<char>(cstr);
+    s->assign(t, static_cast<uint32_t>(std::strlen(t)));
+    draw_text_at(s, x, y, colour, shadow);
+}
+uint32_t format(uint32_t fmt, int a) { return guest::call_cdecl(0x46f320, fmt, a); }
+uint32_t format(uint32_t fmt, int a, int b) { return guest::call_cdecl(0x46f320, fmt, a, b); }
+uint32_t format(uint32_t fmt, int a, int b, int c) { return guest::call_cdecl(0x46f320, fmt, a, b, c); }
+uint32_t format_time(int t) {  // "%d%d.%d%d": seconds and hundredths of t frames
+    return guest::call_cdecl(0x46f320, 0x49cdb0u, t / 1000 % 10, t / 100 % 10, t / 10 % 10, t % 10);
+}
+void fill_row(int row, int x, uint8_t value, int n) {
+    guest::call_import(IMP_memset, g_pixels + static_cast<uint32_t>(g_pitch * row + x), value, n);
+}
+}  // namespace
+
+// The race screen (0x4486c0): the scene into the background surface, then the HUD panel along the
+// bottom (track name, record, lap counter, and per player the coloured frame, place or "F", lap and
+// time boxes and the car), then the sky (where nothing was drawn) shaded by sixteen random light blobs.
+void race_setup_view() {
+    guest::Local<MsString> text, line;
+    line->init();
+    track_scene_draw(true);
+    const int u = g_font_size, b = g_menu_border;
+    int h = g_screen_h, w = g_screen_w;
+    // the panel
+    for (int row = h - b * 5 - u * 4; row < h; row++) {
+        fill_row(row, 0, 0xf0, w);
+        guest::call_import(IMP_memset, g_depth_buf + 2u * static_cast<uint32_t>(w * row), 0, w * 2);
+    }
+    const char *track = g_current_track >= 0 && g_current_track < g_selected_tracks.size()
+                            ? g_selected_tracks[g_current_track].c_str()
+                            : nullptr;
+    const uint32_t slash = guest::call_import(IMP_strrchr, guest::addr(track), 0x5cu);
+    text->init();
+    draw_cstr(text.get(), slash + 1, guest::to_int(static_cast<float>(u) * 0.5f), h - b * 3 - u * 4, 0xf2, 0xf1);
+    text->destroy();
+    const int rt = g_record_time[0];
+    draw_cstr(line.get(), format(0x49cd94u, rt / 100, rt / 10 % 10, rt % 10), guest::to_int(static_cast<float>(u) * 0.5f),
+              h - (u + b) * 2, 0xf2, 0xf1);  // "TR: %d.%d%ds"
+    {
+        const char *laps = &guest::at<char>(format(0x49ccc4u, g_leader_laps + 1, g_race_laps));  // "%d/%d"
+        line->assign(laps, static_cast<uint32_t>(std::strlen(laps)));
+        const float fu = static_cast<float>(u);
+        const int x = guest::to_int(static_cast<float>(w) * 0.25f -
+                                    (static_cast<float>(static_cast<double>(line->size)) + 0.5f) * fu);
+        draw_text_at(line.get(), x, h - (u + b) * 2, 0xf2, 0xf1);
+    }
+    for (int p = 0; p < g_player_count; p++) {
+        uint8_t *car = g_car_states[p].raw;
+        const int colour = 0xc5 + p * 8;
+        const float fu = static_cast<float>(u);
+        const int x0 = guest::to_int(static_cast<float>((p + 2) * w) * 0.125f);
+        int row = h - (u + b) * 4;
+        const int boxes_end = h - b * 3 - u * 2;
+        // the player's frame in its colour: the upper part around the place / lap boxes, the lower part
+        // under them
+        for (; row < boxes_end; row++) {
+            fill_row(row, x0 - b - guest::to_int(fu * -3.5f), static_cast<uint8_t>(colour - 4), (b + u * 3) * 2);
+            fill_row(row, x0 - guest::to_int(fu * -5.5f), static_cast<uint8_t>(colour), u * 2);
+        }
+        for (; row < h - b; row++) {
+            fill_row(row, x0 - b - guest::to_int(fu * -0.5f), static_cast<uint8_t>(colour - 4), u * 9 + b * 2);
+            fill_row(row, x0 - guest::to_int(fu * -5.5f), static_cast<uint8_t>(colour), u * 2);
+        }
+        for (int r = h - b * 3 - u * 4; r < boxes_end; r++) {
+            fill_row(r, x0 - guest::to_int(fu * -3.5f), 0xf1, u * 6);
+            fill_row(b + u * 2 + r, x0 - guest::to_int(fu * -3.5f), 0xf1, u * 6);
+        }
+        // place, or "F" for a car short of fuel with laps to go
+        const uint16_t laps = *reinterpret_cast<uint16_t *>(car + 0xd4);
+        const uint16_t fuel = *reinterpret_cast<uint16_t *>(car + 0xe0);
+        const uint32_t fuel_lap = static_cast<uint32_t>(g_race_options.b0a) * static_cast<uint32_t>(g_track_length);
+        text->init();
+        uint8_t place_colour;
+        if (g_race_laps - laps < 2 || g_race_laps <= g_leader_laps ||
+            guest::to_int(static_cast<float>(static_cast<double>(fuel_lap)) * 1.8f) <= static_cast<int>(fuel)) {
+            const char *s = &guest::at<char>(format(0x49cdd8u, car[0] + 1));  // "%d"
+            text->assign(s, static_cast<uint32_t>(std::strlen(s)));
+            place_colour = 0xf5;
+        } else {
+            car[2] = 1;
+            text->assign(&guest::at<char>(0x49cda4), 1);  // "F"
+            place_colour = 0xf4;
+        }
+        draw_text_at(text.get(), u * 4 + x0, h - b * 3 - u * 4, place_colour, 0);
+        text->destroy();
+        // lap number and lap time (the best lap once finished)
+        draw_cstr(line.get(), format(0x49cda8u, laps), x0 + u * 6, h - b * 3 - u * 4, car[2] < 2 ? 0xf2 : 0xf5, 0);  // " %2d"
+        uint8_t time_colour;
+        uint32_t time;
+        if (car[2] < 2) {
+            time = format_time(*reinterpret_cast<int32_t *>(car + 0x14));
+            time_colour = p == g_unknown_4a4798 ? (p == g_unknown_4a479c ? 0xf4 : 0xf7) : 0xf2;
+        } else {
+            time = format_time(*reinterpret_cast<uint16_t *>(car + 0xdc));
+            time_colour = p == g_unknown_4a4798 ? 0xf4 : 0xf5;
+        }
+        draw_cstr(line.get(), time, x0 + u * 4, h - (u + b) * 2, time_colour, 0);
+        draw_car_preview(static_cast<uint32_t>(p), g_race_models[p], x0 - guest::to_int(fu * -1.75f), h - b * 4 - u * 3, 120.0f);
+        w = g_screen_w;
+        h = g_screen_h;
+    }
+    // the sky: light blobs at random places
+    struct { float x, y; } blob[16];
+    for (auto &bl : blob) {
+        const uint8_t i = static_cast<uint8_t>(g_random_index + 1);
+        g_random_index = static_cast<uint8_t>(g_random_index + 2);
+        bl.x = (guest::at<float>(g_random_table + 4u * i) * 1.4f - 0.2f) * static_cast<float>(w);
+        bl.y = (1.2f - guest::at<float>(g_random_table + 4u * g_random_index) * 1.2f) * static_cast<float>(h);
+    }
+    for (int y = 0; y < h; y++) {
+        uint8_t *pixels = &guest::at<uint8_t>(g_pixels + static_cast<uint32_t>(g_pitch * y));
+        uint8_t *image = &guest::at<uint8_t>(g_track_image + static_cast<uint32_t>(w * y));
+        const uint16_t *depth = &guest::at<uint16_t>(g_depth_buf + 2u * static_cast<uint32_t>(w * y));
+        for (int x = 0; x < w; x++) {
+            if (depth[x] != 0xffff) continue;
+            float light = 0.0f;
+            for (const auto &bl : blob) {
+                const float dx = static_cast<float>(x) - bl.x, dy = static_cast<float>(y) - bl.y;
+                light = light + 20000.0f / ((dx * 0.5f * dx + 5000.0f) + dy * 10.0f * dy);
+            }
+            if (6.99f < light) light = 6.99f;
+            pixels[x] = static_cast<uint8_t>(guest::to_int(light) - 8);
+            image[x] = 0xf8;
+        }
+    }
+    unlock_surface();
+    line->destroy();
 }

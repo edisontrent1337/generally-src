@@ -233,7 +233,7 @@ int game_load(const MsString *name) {
             guest::call_regs(0x447c50, 0, 0);  // season end
         }
     } else {
-        guest::call_regs(0x4486c0, 0, 0);
+        race_setup_view();
         if (g_game_state == 0) {
             race_info_box();
             pause_menu_open();

@@ -626,3 +626,11 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   cross-sections, corner posts via box_draw_pixels, the objects via 0x44fa10 unless FasterTrackPreview,
   the water plane) is shared with race_setup_view (0x4486c0). Verified by whole-run traces (file I/O).
   track_preview_load now returns its result (0 / -1), which this function uses.
+- 2026-11-22 (cont.): 0x4486c0 `race_setup_view` (track_scene.cpp): the shared scene, then the HUD
+  panel (cleared to 0xf0 with depth 0; track name, "TR: s.hs" record, "lap/laps", per player the frame
+  in its colour 0xc5 + 8p (and -4), place or "F" (fuel below 1.8 x fuel option x lap length with laps to
+  go; sets the car's state 1), " %2d" laps, the lap time or once finished the best lap in the fastest-
+  lap colours, the car preview), then the sky: pixels with depth 0xffff lit by sixteen random blobs
+  (20000 / (dx² / 2 + 5000 + 10 dy²) summed, capped at 6.99, colour int - 8; track image 0xf8).
+  Shadow-checked (one call per race, 0 mismatches). Uncovered: the finished car's best lap here, the
+  track preview's failure path.

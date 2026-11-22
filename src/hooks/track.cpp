@@ -14,3 +14,4 @@ REWRITE(490120, "track_preview_load", 0, 0, RET_EAX) { ret(c, static_cast<uint32
 REWRITE(491870, "track_preview_render", 1, 0, RET_EAX) {
     ret(c, static_cast<uint32_t>(track_preview_render(&guest::at<char>(ECX), static_cast<int>(EDX), argi(c, 0))));
 }
+REWRITE(4486c0, "race_setup_view", 0, 0, RET_NONE) { race_setup_view(); }
