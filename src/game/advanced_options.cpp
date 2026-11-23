@@ -145,8 +145,6 @@ void adv_draw_labels() {
 namespace {
 constexpr uint32_t kAutosave = 0x49cce8;  // the autosave game's name (8 characters)
 
-void game_reinit() { guest::call_regs(0x478d40, 0, 0); }  // loads fonts, sounds, cars, lists (not rewritten yet)
-
 void rescale_all(void (*fn)(Widget *, int, float, float)) {
     // the 640x480 layout (80 x 60 units) is centred on the screen
     float dx = static_cast<float>(g_screen_w - g_font_size * 80) * 0.5f;
@@ -236,7 +234,7 @@ void adv_options_done(Widget *button) {
                 autosaved = g_saved_gui != nullptr;
                 if (autosaved) autosave_race();
                 game_free(false);
-                game_reinit();
+                game_init();
                 reset_player_drivers();
                 gui_redraw_all();
             } else if (new_sounds) {
@@ -264,7 +262,7 @@ void adv_options_done(Widget *button) {
             o.i10 = g_screen_w = static_cast<int32_t>((*size)[0]);
             o.i14 = g_screen_h = static_cast<int32_t>((*size)[1]);
             game_free(false);
-            game_reinit();
+            game_init();
             rescale_all(widgets_to_screen);
             reset_player_drivers();
             gui_redraw_all();

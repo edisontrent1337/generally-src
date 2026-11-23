@@ -121,7 +121,7 @@ static void error_box(uint32_t text) {
 }
 
 // The game: seeds rand with the tick count, loads the race options, starts SDL (video, audio, joystick),
-// sets the window caption, builds all screens (0x478d40), and runs the event loop until it reports the
+// sets the window caption, builds all screens (game_init), and runs the event loop until it reports the
 // end (sleeping 1 ms per round while a race runs, 25 ms otherwise). On exit everything is freed, the race
 // options are saved and SDL is shut down. Returns 0, or -1 if the game could not start.
 int game_main() {
@@ -132,7 +132,7 @@ int game_main() {
     uint32_t caption = guest::call_import(IMP_malloc, 15u);  // never freed
     std::strcpy(&guest::at<char>(caption), &guest::at<char>(STR_GAME_NAME));
     guest::call_import(IMP_SDL_WM_SetCaption, caption, 0u);
-    if (static_cast<int>(guest::call_regs(0x478d40, 0, 0)) < 0) {  // game_init (not rewritten yet)
+    if (game_init() < 0) {
         error_box(STR_INIT_FAILED);
         return -1;
     }

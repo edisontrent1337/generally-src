@@ -4,4 +4,5 @@
 
 uint32_t win_main();
 int game_main();
+int game_init();
 void game_free(bool everything);
