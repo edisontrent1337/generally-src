@@ -51,6 +51,7 @@ REWRITE(43abf0, "object_collide_line", 7, 0, RET_NONE) {
     object_collide_line(static_cast<int>(ECX), argf(c, 0), argf(c, 1), argf(c, 2), argf(c, 3), argf(c, 4), argf(c, 5),
                         argf(c, 6));
 }
+REWRITE(420560, "car_collide_objects", 0, 0, RET_NONE) { car_collide_objects(static_cast<int>(ECX)); }
 REWRITE(42f640, "object_collide_objects", 0, 0, RET_NONE) { object_collide_objects(static_cast<int>(ECX)); }
 REWRITE(43a910, "object_collide_sphere", 5, 0, RET_EAX) {
     ret(c, guest::addr(object_collide_sphere(ecx<Vec3>(c), static_cast<int>(EDX), XMM_F(2, 0), argf(c, 1), argf(c, 2),

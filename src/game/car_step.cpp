@@ -680,7 +680,7 @@ void car_step(int p) {
     car_plane_collide(p, 0, far, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.5f, 1.0f);
     car_plane_collide(p, 0, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.5f, 1.0f);
     car_plane_collide(p, 0, 0.0f, 0.0f, far, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f, 1.5f, 1.0f);
-    guest::call_regs(0x420560, static_cast<uint32_t>(p), 0);  // objects and other cars
+    car_collide_objects(p);
     for (int i = 6; i < g_object_count; i++) {
         const uint8_t *o = &guest::at<uint8_t>(g_objects.a + static_cast<uint32_t>(i) * 0x34u);
         if (o[0x1c] != 1 || o[0x1d] != 1) continue;

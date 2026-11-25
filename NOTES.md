@@ -652,3 +652,12 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   whose condition differs by path and type 21 reading the heading an earlier object left on the stack).
   Shadow-checked: whole suite 32k calls, plus a synthetic driver (random balls around each type,
   20000 calls per type) with 0 mismatches.
+- 2026-11-25 (cont.): 0x420560 `car_collide_objects` (object_collide.cpp): a car against all objects.
+  The symbolic executor showed the same geometry per type as 0x42f640 (paths compared after expanding and
+  canonicalising commutative single operations), so the shapes became templates over the contact kind
+  (ball / car). A car's collisions carry a material per part (friction, damping, bounce: most types one
+  for edges and faces and one for corner spheres; drivable faces use the car model's grip at +0x68, the
+  bridge ramp +0x88, with surface codes 2 / 3). Differences: type 32 throws sparks (particle type 8) after
+  a hard hit at speed > 10, type 36 (ball) gets two spheres and both impulses. Shadow-checked over the
+  suite (455k calls) and with a synthetic driver run inside a race (6000 random car positions per type),
+  0 mismatches; the ball variant re-checked the same way after the refactoring.
