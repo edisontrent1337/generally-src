@@ -634,3 +634,11 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   (20000 / (dx² / 2 + 5000 + 10 dy²) summed, capped at 6.99, colour int - 8; track image 0xf8).
   Shadow-checked (one call per race, 0 mismatches). Uncovered: the finished car's best lap here, the
   track preview's failure path.
+- 2026-11-23: 0x478d40 `game_init` (game_init.cpp; 1, or -1 when font_build fails): language, gr.ini,
+  view renderer by TyreAutoSort, video (640x480 when the configured mode is not in the startup mode
+  list), audio + sound set, disc width table, palette, font, cars, key / joystick buffers (the joystick
+  buffer is freed, not cleared, before reallocation), then the widget arrays of all eleven screens on
+  the 80 x 60 font-unit grid, centred. Arrays that exist only get their captions from the language again
+  (also the "n selected" caption and the two fixed folder entries). Widget arguments were extracted from
+  the disassembly with a symbolic stepper. Verified by whole-run traces; the heap hash covers the
+  widget arrays.
