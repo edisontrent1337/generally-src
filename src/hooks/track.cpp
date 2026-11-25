@@ -1,5 +1,6 @@
 // Entry adapters: the loaded track.
 #include "bridge/guest.h"
+#include "game/objects.h"
 #include "game/track.h"
 
 using namespace abi;
@@ -11,6 +12,7 @@ REWRITE(416f70, "terrain_height", 3, 0, RET_XMM0) {
 REWRITE(416c50, "terrain_sample", 0, 0, RET_NONE) { terrain_sample(ecx<Vec3>(c), edx<Vec3>(c)); }
 REWRITE(43d390, "track_load", 0, 0, RET_EAX) { ret(c, static_cast<uint32_t>(track_load())); }
 REWRITE(490120, "track_preview_load", 0, 0, RET_EAX) { ret(c, static_cast<uint32_t>(track_preview_load(ecx<MsString>(c)))); }
+REWRITE(44fa10, "objects_draw", 0, 0, RET_NONE) { objects_draw(); }
 REWRITE(491870, "track_preview_render", 1, 0, RET_EAX) {
     ret(c, static_cast<uint32_t>(track_preview_render(&guest::at<char>(ECX), static_cast<int>(EDX), argi(c, 0))));
 }

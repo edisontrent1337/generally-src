@@ -211,7 +211,7 @@ void track_scene_draw(bool objects) {
     post(g_track_size + 0.4f, -0.4f, 0x3f);
     post(-0.4f, g_track_size + 0.4f, 0xfc0);
     post(g_track_size + 0.4f, g_track_size + 0.4f, 0xfff);
-    if (objects) guest::call_regs(0x44fa10, 0, 0);
+    if (objects) objects_draw();
     draw_water(w);
 }
 

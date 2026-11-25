@@ -24,5 +24,7 @@ void object_collide_line(int i, float px, float py, float pz, float dx, float dy
 Vec3 *object_collide_sphere(Vec3 *impulse, int i, float other_mass, float px, float py, float pz, float radius);
 // Collides loose object i with every other object of the track (their shapes by type), 0x42f640.
 void object_collide_objects(int i);
+// Draws the objects into the static scene (0x44fa10).
+void objects_draw();
 // Collides car `car` with every object of the track, 0x420560.
 void car_collide_objects(int car);

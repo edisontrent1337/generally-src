@@ -661,3 +661,14 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   a hard hit at speed > 10, type 36 (ball) gets two spheres and both impulses. Shadow-checked over the
   suite (455k calls) and with a synthetic driver run inside a race (6000 random car positions per type),
   0 mismatches; the ball variant re-checked the same way after the refactoring.
+- 2026-11-25 (cont.): 0x44fa10 `objects_draw` (object_render.cpp): the track's objects drawn into the
+  static scene, 37 types of boxes (box_draw_pixels), triangles and shadows (undraw_triangle restores the
+  track image under a footprint). Objects are set on the terrain (some tilt their heading to its slope,
+  boats float on the water, the pontoon sits at the water level) and drawn in an upright frame; trees
+  scatter leaves from the random table, the grandstand random spectators, bushes random colours via
+  rand(). The world / screen point slots persist from object to object as in the original (points
+  behind the camera keep the old screen position). Derived with the symbolic executor in a slot mode
+  (persistent arrays as named slots, visibility tests as conditional stores, loops forced to one round
+  where their trip count is random). Shadow-checked with a synthetic driver inside a race: every type
+  alone and all mixed (400 calls of three random objects each), 0 mismatches.
+  All 345 game functions are rewritten now.
