@@ -642,3 +642,13 @@ Authoritative definitions are the structs in `src/game/*.h` (with offsets in com
   (also the "n selected" caption and the two fixed folder entries). Widget arguments were extracted from
   the disassembly with a symbolic stepper. Verified by whole-run traces; the heap hash covers the
   widget arrays.
+- 2026-11-25: 0x42f640 `object_collide_objects` (object_collide.cpp): a loose object (ball) against all
+  other objects of the track. Each of the 36 types has a fixed shape of planes, edges (lines) and corner
+  spheres in the object's frame (h heading, n = normalised (0, 1, 0) x h, s = h x n), tested when within
+  reach horizontally and where the ball's offset along h / n / s makes them relevant (walls, poles, boxes,
+  a ramp, a bridge, a hump, a flat strip, an arch, ...); type 36 is another ball (impulse exchange, sets
+  its moving flag +0x1d); type 33 has no shape. Derived from the disassembly with a path-sensitive
+  symbolic executor (exact float expressions and branch conditions per path, which also exposed a branch
+  whose condition differs by path and type 21 reading the heading an earlier object left on the stack).
+  Shadow-checked: whole suite 32k calls, plus a synthetic driver (random balls around each type,
+  20000 calls per type) with 0 mismatches.

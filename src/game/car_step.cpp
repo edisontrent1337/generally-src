@@ -689,7 +689,7 @@ void car_step(int p) {
         object_collide_plane(i, edge, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f);
         object_collide_plane(i, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
         object_collide_plane(i, 0.0f, 0.0f, edge, 0.0f, 0.0f, -1.0f, 1.0f);
-        guest::call_regs(0x42f640, static_cast<uint32_t>(i), 0);
+        object_collide_objects(i);
     }
 
     // checkpoints: crossing the next one in order advances; the last one completes a lap

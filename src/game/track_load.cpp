@@ -152,7 +152,8 @@ void read_objects(GameFile *f, uint16_t version, bool preview) {
             continue;
         }
         o.vel = Vec3();
-        *reinterpret_cast<uint16_t *>(o.unknown1c) = 0;
+        o.unknown1c = 0;
+        o.moving = 0;
         o.mass = 0.001f;
         o.radius = 0.8f;
     }
